@@ -1,0 +1,37 @@
+train.py / saved_model / env = fr3() / 0726 17:52
+
+매 5hz 마다 action 생성 
+pre train 사용 안하고, 
+self.stack = 5
+6가지 handle case  + clock / counter clock 둘 다. 
+clssifier 이용해서 잡아야 하는 위치 선정
+
+obeservation에 잡는 위치, 방향, 그리고 q값이 추가됨 
+
+object를 6개 후보군(rotation 방향도 2가지) 에서 random 을 추가 해 줌!!(robustness) 
+handle + valve!!
+😘️controller x_kp = 0, drpy -> gradually increased, gripper split으로!
+😘️operational space control 추가 해 줬고, next rpy 잘못 만드는거 수정해줬다!!!!!!!!!
+
+일단 gripper close = 0.01 로 학습 했음 (0.005로 했을 때 더 꽉 잡고 잘 돌림)
+
+
+ observation = dict(object=self.obs_object,  # [self.model.body_pos[bid], obj_rotation6d, [result.item()/36], [direction]]
+ 		     q=self.obs_q, 
+ 		     rpy=self.obs_rpy, 
+ 		     rpy_des=self.obs_rpy_des, 
+ 		     x_plan=self.obs_xyzdes,
+ 		     x_pos=self.obs_xyz)
+
+result.item() -> classifier output 0~35 사이 의 값!
+
+
+reward done -> contact /  bound 나누어줌. 충돌이 더 안좋게 평가되기 위함
+self.rw_acc = 1  # np.exp(-sum(abs(action - self.action_pre)))
+self.rw_xyz = 0.1  # np.exp(-2*sum(abs(self.obs_xyz[0] - self.obs_xyzdes[0])))
+self.rw_t = 1  # time done -> reward_time = 1
+self.rw_c = 10  # contact done -> -1
+self.rw_b = 5  # joint boundary done -> -1
+self.rw_gr = 1.5  # 1/-1 grasp
+self.rw_rpy = 0.5 # np.exp(-2*sum(abs(rotations.subtract_euler(self.obs_rpy_des, self.obs_rpy))[0]))
+

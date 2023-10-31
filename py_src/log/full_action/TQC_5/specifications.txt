@@ -1,0 +1,13 @@
+n_critic = 5
+
+self.rw_time = 10
+self.rw_contact = 0
+self.rw_goal = 0
+self.rw_bound = 10  # joint boundary done -> -1
+self.rw_grasp = 0 #.5  # 1/-1 grasp
+self.rw_distance = 1
+self.rw_rotation = 100
+self.rw_gripper = 0 #.5
+
+다 돌렸을 때 끝나는 조건 (x) 
+valve frictionloss = 1
