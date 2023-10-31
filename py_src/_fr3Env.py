@@ -505,6 +505,7 @@ class fr3_6d_train:
             result = 0
             self.o_margin = [[0], [0], [-0.017]]
             self.T_vv = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+            direction = 0
 
         init_angle = 2*np.pi*result/36
         # self.obs_object = np.concatenate([self.model.body_pos[bid], obj_rotation6d, [result/36], [direction]], axis=0)
