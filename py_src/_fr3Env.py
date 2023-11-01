@@ -486,6 +486,16 @@ class fr3_6d_train:
             classifier = self.classifier_cclk
             add_idx = +1
             direction = +1
+        else:
+            if (-1) ** self.episode_number == -1:
+                classifier = self.classifier_clk
+                add_idx = -1
+                direction = -1
+            else:
+                classifier = self.classifier_cclk
+                add_idx = +1
+                direction = +1
+
         if obj == "handle":
             obj_id = [1,0,1]
             input_data = random_quat + random_pos + [radius]
@@ -1040,6 +1050,15 @@ class fr3_6d_test:
             classifier = self.classifier_cclk
             add_idx = +1
             direction = +1
+        else:
+            if (-1) ** self.episode_number == -1:
+                classifier = self.classifier_clk
+                add_idx = -1
+                direction = -1
+            else:
+                classifier = self.classifier_cclk
+                add_idx = +1
+                direction = +1
         if obj == "handle":
             obj_id = [1,0,1]
             input_data = random_quat + random_pos + [radius]
