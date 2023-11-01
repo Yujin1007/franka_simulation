@@ -5,7 +5,9 @@ from torch import nn
 from gymnasium import spaces
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 
-from sb3_contrib.tqcsm.tqc_savemodel import TQCsm
+from tqc_savemodel import TQCsm
+
+# from sb3_contrib.tqcsm.tqc_savemodel import TQCsm
 
 import _fr3Env
 import torch.nn as nn
@@ -33,11 +35,12 @@ def main():
     MODEL_PATH = "./log/6d/TQC_2/step_900012"        # env ->_fr3Env.fr3_6d_test()
     # MODEL_PATH = "./log/3d/TQC_16/step_1000000.zip" # env  -> _fr3Env.fr3_3d_test()
 
-    istrain = False
+    istrain = True
     isrendering = True
     israndomenv = True
     isheuristic = False
-    env = _fr3Env.fr3_6d_test()
+    # env = _fr3Env.fr3_6d_test()
+    env = _fr3Env.fr3_6d_train()
     # env = _fr3Env.fr3_3d_test()
     env.env_rand = israndomenv
     env.rendering = isrendering

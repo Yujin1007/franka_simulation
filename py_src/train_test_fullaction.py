@@ -5,7 +5,7 @@ from torch import nn
 from gymnasium import spaces
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor, CombinedExtractor
 
-from sb3_contrib.tqcsm.tqc_savemodel import TQCsm, TQCsm_new
+from tqc_savemodel import TQCsm
 
 from stable_baselines3.common.env_util import make_vec_env
 import _fr3Env
