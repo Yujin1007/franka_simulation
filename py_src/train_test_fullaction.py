@@ -5,7 +5,7 @@ from torch import nn
 from gymnasium import spaces
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor, CombinedExtractor
 
-from tqc_savemodel import TQCsm
+# from tqc_savemodel import TQCsm
 
 from stable_baselines3.common.env_util import make_vec_env
 import _fr3Env
@@ -14,9 +14,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from stable_baselines3 import PPO
 from stable_baselines3 import TD3
-from stable_baselines3.td3.policies import MlpPolicy
-from stable_baselines3.common.vec_env import DummyVecEnv
-from stable_baselines3.common.buffers import DictReplayBuffer_YJ
+from sb3_contrib import TQC
+# from stable_baselines3.td3.policies import MlpPolicy
+# from stable_baselines3.common.vec_env import DummyVecEnv
+# from stable_baselines3.common.buffers import DictReplayBuffer_YJ
 import numpy as np
 # Parallel environments
 
@@ -27,8 +28,8 @@ def main():
 
     total_timestep = 5e6
     MODEL_PATH="./log/full_action/TQC_5/step_900103.zip"
-    istrain =  True
-    isrendering =False
+    istrain =  False
+    isrendering =True
     israndomenv = True
     isheuristic = False
     env = _fr3Env.fr3_full_action()
@@ -38,13 +39,13 @@ def main():
     # policy_kwargs = dict(features_extractor_class=CombinedExtractor, net_arch=[256, 128, 64],  n_critics=5, n_quantiles=25)
     policy_kwargs = dict(n_critics=5, n_quantiles=25)
 
-    model = TQCsm("MultiInputPolicy",
+    model = TQC("MultiInputPolicy",
                   env,
                   top_quantiles_to_drop_per_net=2,
                   verbose=1,
                   policy_kwargs=policy_kwargs,
-                  save_path='/home/kist-robot2/catkin_ws/src/franka_emika_panda/py_src/log/full_action/TQC_6/step_{}',
-                  save_interval=1e5,
+                  # save_path='/home/kist-robot2/catkin_ws/src/franka_emika_panda/py_src/log/full_action/TQC_6/step_{}',
+                  # save_interval=1e5,
                   tensorboard_log="log/full_action/",
                   learning_starts=100,
                   gamma=0.99,
@@ -70,7 +71,7 @@ def main():
 
         else:  # test trained model
             del model
-            model = TQCsm.load(MODEL_PATH)
+            model = TQC.load(MODEL_PATH)
             for _ in range(iteration):
                 obs = env.reset()
                 done = False
