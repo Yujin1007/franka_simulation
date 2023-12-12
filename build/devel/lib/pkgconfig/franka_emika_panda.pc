@@ -1,8 +1,0 @@
-prefix=/home/kist-robot2/catkin_ws/src/franka_emika_panda/build/devel
-
-Name: franka_emika_panda
-Description: Description of franka_emika_panda
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

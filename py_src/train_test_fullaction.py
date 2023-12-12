@@ -19,15 +19,16 @@ from sb3_contrib import TQC
 # from stable_baselines3.common.vec_env import DummyVecEnv
 # from stable_baselines3.common.buffers import DictReplayBuffer_YJ
 import numpy as np
+import os
 # Parallel environments
 
-
+HOME = os.getcwd()
 
 def main():
     # Parallel environments
 
     total_timestep = 5e6
-    MODEL_PATH="./log/full_action/TQC_5/step_900103.zip"
+    MODEL_PATH="log/full_action/TQC_5/step_900103.zip"
     istrain =  False
     isrendering =True
     israndomenv = True
@@ -71,6 +72,7 @@ def main():
 
         else:  # test trained model
             del model
+            os.chdir(HOME)
             model = TQC.load(MODEL_PATH)
             for _ in range(iteration):
                 obs = env.reset()

@@ -1,20 +1,28 @@
-
-# Consider dependencies only in project.
-set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
-
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/kist/Desktop/franka_simulation/simulate/controller.cpp" "/home/kist/Desktop/franka_simulation/build/CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o"
+  "/home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc" "/home/kist/Desktop/franka_simulation/build/CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o"
+  "/home/kist/Desktop/franka_simulation/simulate/main.cpp" "/home/kist/Desktop/franka_simulation/build/CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o"
+  "/home/kist/Desktop/franka_simulation/simulate/robotmodel.cpp" "/home/kist/Desktop/franka_simulation/build/CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o"
+  "/home/kist/Desktop/franka_simulation/simulate/trajectory.cpp" "/home/kist/Desktop/franka_simulation/build/CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "MJSIMULATE_STATIC"
   )
 
-# The set of dependency files which are needed:
-set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/controller.cpp" "CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o.d"
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/glfw_dispatch.cc" "CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o.d"
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/main.cc" "CMakeFiles/franka_emika_lib_py.dir/simulate/main.cc.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/main.cc.o.d"
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/robotmodel.cpp" "CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o.d"
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/simulate.cc" "CMakeFiles/franka_emika_lib_py.dir/simulate/simulate.cc.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/simulate.cc.o.d"
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/trajectory.cpp" "CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o.d"
-  "/home/kist-robot2/catkin_ws/src/franka_emika_panda/simulate/uitools.cc" "CMakeFiles/franka_emika_lib_py.dir/simulate/uitools.cc.o" "gcc" "CMakeFiles/franka_emika_lib_py.dir/simulate/uitools.cc.o.d"
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/home/kist/miniconda3/envs/Franka_Valve/include"
+  "/home/kist/miniconda3/envs/Franka_Valve/include/python3.8"
+  "../include"
+  "/usr/include/python3.8"
   )
 
 # Targets to which this target links.

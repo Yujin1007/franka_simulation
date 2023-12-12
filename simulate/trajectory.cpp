@@ -1,5 +1,7 @@
 #include "trajectory.h"
 
+/* trajectory.cpp, controller.cpp, robotmodel.cpp 이외엔 사용 X */
+
 CTrajectory::CTrajectory()
 {
 	Initialize();
