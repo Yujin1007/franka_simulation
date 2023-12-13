@@ -57,22 +57,9 @@ include CMakeFiles/franka_emika_panda.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/franka_emika_panda.dir/flags.make
 
-CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.o: CMakeFiles/franka_emika_panda.dir/flags.make
-CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.o: ../simulate/glfw_dispatch.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.o -c /home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc
-
-CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc > CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.i
-
-CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc -o CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.s
-
 CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o: CMakeFiles/franka_emika_panda.dir/flags.make
 CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o: ../simulate/controller.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/controller.cpp
 
 CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.i: cmake_force
@@ -85,7 +72,7 @@ CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.s: cmake_force
 
 CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o: CMakeFiles/franka_emika_panda.dir/flags.make
 CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o: ../simulate/robotmodel.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/robotmodel.cpp
 
 CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.i: cmake_force
@@ -98,7 +85,7 @@ CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.s: cmake_force
 
 CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o: CMakeFiles/franka_emika_panda.dir/flags.make
 CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o: ../simulate/trajectory.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/trajectory.cpp
 
 CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.i: cmake_force
@@ -111,7 +98,7 @@ CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.s: cmake_force
 
 CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.o: CMakeFiles/franka_emika_panda.dir/flags.make
 CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.o: ../simulate/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/main.cpp
 
 CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.i: cmake_force
@@ -124,7 +111,6 @@ CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.s: cmake_force
 
 # Object files for target franka_emika_panda
 franka_emika_panda_OBJECTS = \
-"CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.o" \
 "CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o" \
 "CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o" \
 "CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o" \
@@ -133,7 +119,6 @@ franka_emika_panda_OBJECTS = \
 # External object files for target franka_emika_panda
 franka_emika_panda_EXTERNAL_OBJECTS =
 
-franka_emika_panda: CMakeFiles/franka_emika_panda.dir/simulate/glfw_dispatch.cc.o
 franka_emika_panda: CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o
 franka_emika_panda: CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o
 franka_emika_panda: CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o
@@ -143,16 +128,8 @@ franka_emika_panda: /usr/lib/x86_64-linux-gnu/libSM.so
 franka_emika_panda: /usr/lib/x86_64-linux-gnu/libICE.so
 franka_emika_panda: /usr/lib/x86_64-linux-gnu/libX11.so
 franka_emika_panda: /usr/lib/x86_64-linux-gnu/libXext.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libOpenGL.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libEGL.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libGLEW.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libGLEW.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libOpenGL.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libGLX.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libGLU.so
-franka_emika_panda: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 franka_emika_panda: CMakeFiles/franka_emika_panda.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable franka_emika_panda"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable franka_emika_panda"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/franka_emika_panda.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

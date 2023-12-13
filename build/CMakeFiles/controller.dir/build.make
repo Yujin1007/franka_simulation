@@ -80,18 +80,10 @@ controller_EXTERNAL_OBJECTS =
 controller.cpython-38-x86_64-linux-gnu.so: CMakeFiles/controller.dir/simulate/controller.cpp.o
 controller.cpython-38-x86_64-linux-gnu.so: CMakeFiles/controller.dir/build.make
 controller.cpython-38-x86_64-linux-gnu.so: libfranka_emika_lib_py.a
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libOpenGL.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libEGL.so
 controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libSM.so
 controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libICE.so
 controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libX11.so
 controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libXext.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libGLEW.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libGLEW.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libOpenGL.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libGLX.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libGLU.so
-controller.cpython-38-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 controller.cpython-38-x86_64-linux-gnu.so: CMakeFiles/controller.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX shared module controller.cpython-38-x86_64-linux-gnu.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/controller.dir/link.txt --verbose=$(VERBOSE)

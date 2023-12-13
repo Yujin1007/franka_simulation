@@ -57,22 +57,9 @@ include CMakeFiles/franka_emika_lib_py.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/franka_emika_lib_py.dir/flags.make
 
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o: CMakeFiles/franka_emika_lib_py.dir/flags.make
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o: ../simulate/glfw_dispatch.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o -c /home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc
-
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc > CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.i
-
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kist/Desktop/franka_simulation/simulate/glfw_dispatch.cc -o CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.s
-
 CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o: CMakeFiles/franka_emika_lib_py.dir/flags.make
 CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o: ../simulate/controller.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/controller.cpp
 
 CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.i: cmake_force
@@ -85,7 +72,7 @@ CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.s: cmake_force
 
 CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o: CMakeFiles/franka_emika_lib_py.dir/flags.make
 CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o: ../simulate/robotmodel.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/robotmodel.cpp
 
 CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.i: cmake_force
@@ -98,7 +85,7 @@ CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.s: cmake_force
 
 CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o: CMakeFiles/franka_emika_lib_py.dir/flags.make
 CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o: ../simulate/trajectory.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/trajectory.cpp
 
 CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.i: cmake_force
@@ -109,38 +96,21 @@ CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kist/Desktop/franka_simulation/simulate/trajectory.cpp -o CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.s
 
-CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o: CMakeFiles/franka_emika_lib_py.dir/flags.make
-CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o: ../simulate/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o -c /home/kist/Desktop/franka_simulation/simulate/main.cpp
-
-CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kist/Desktop/franka_simulation/simulate/main.cpp > CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.i
-
-CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kist/Desktop/franka_simulation/simulate/main.cpp -o CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.s
-
 # Object files for target franka_emika_lib_py
 franka_emika_lib_py_OBJECTS = \
-"CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o" \
 "CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o" \
 "CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o" \
-"CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o" \
-"CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o"
+"CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o"
 
 # External object files for target franka_emika_lib_py
 franka_emika_lib_py_EXTERNAL_OBJECTS =
 
-libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o
 libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o
 libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o
 libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o
-libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o
 libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/build.make
 libfranka_emika_lib_py.a: CMakeFiles/franka_emika_lib_py.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX static library libfranka_emika_lib_py.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kist/Desktop/franka_simulation/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libfranka_emika_lib_py.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/franka_emika_lib_py.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/franka_emika_lib_py.dir/link.txt --verbose=$(VERBOSE)
 

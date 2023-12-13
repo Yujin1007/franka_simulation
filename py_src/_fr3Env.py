@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 from numpy.linalg import inv
 import mujoco
 import gym
@@ -13,6 +12,8 @@ import rotations
 import torch
 import os
 
+from controller.full_action import controller
+
 BODY = 1
 JOINT = 3
 GEOM = 5
@@ -21,6 +22,8 @@ TASK_SPACE_TIME = 3+1+0.5
 
 RL = 2
 MANUAL = 1
+
+HOME = os.getcwd()
 
 def BringClassifier(path):
     classifier = torch.load(path)
@@ -31,17 +34,16 @@ class fr3_full_action:
     metadata = {"render_modes": ["human"], "render_fps": 30}
 
 
-    def __init__(self) -> None:
-        os.chdir("..")
-        os.chdir(os.path.join("model", "franka_emika_panda"))
-
-        # from controller.full_action import controller
+    def __init__(self) -> None:        
         self.k = 7  # for jacobian calculation
         self.dof = 9  # all joints (include gripper joint)
+
+        os.chdir("..")
+        os.chdir(os.path.join("model", "franka_emika_panda"))
         self.model_path = "scene_valve.xml"
         self.model = mujoco.MjModel.from_xml_path(self.model_path)
         self.data = mujoco.MjData(self.model)
-        # self.controller = controller.CController(self.k)
+        self.controller = controller.CController(self.k)
         self._torque = np.zeros(self.dof, dtype=np.float64)
         self.stack = 5
         self.rendering = False
@@ -122,9 +124,7 @@ class fr3_full_action:
         self.T_vv = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]])
 
     def reset(self):
-
-
-        # self.controller.initialize()
+        self.controller.initialize()
         self.data.qpos = self.q_init
         self.data.qvel = self.qdot_init
         self.handle_angle = 0
@@ -137,11 +137,11 @@ class fr3_full_action:
         # self.goal_angle = -4 * np.pi
         self.rotation_angle_pre = self.goal_angle - self.init_angle
 
-        # self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
-        #                      self.model.opt.timestep, self.data.xpos.reshape(66, ))
+        self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
+                             self.model.opt.timestep, self.data.xpos.reshape(66, ))
 
-        # self.controller.randomize_env(r, obj, self.init_angle, self.goal_angle, RL)
-        # self.controller.control_mujoco()
+        self.controller.randomize_env(r, obj, self.init_angle, self.goal_angle, RL)
+        self.controller.control_mujoco()
         self.start_time = self.data.time
 
         self.time_done = False
@@ -159,8 +159,8 @@ class fr3_full_action:
         self.obs_xyz_dot = np.zeros([self.stack, 3])
         self.obs_object = np.zeros([1, 17])
 
-        # end_effector = self.controller.get_ee_simple()
-        end_effector = np.zeros((2,6))
+        end_effector = self.controller.get_ee_simple()
+        # end_effector = np.zeros((2,6))
         _ = self._observation(end_effector)
         self.distance_init = np.sqrt(
             (end_effector[1][0] - self.obj_normal[0]) ** 2 + (end_effector[1][1] - self.obj_normal[1]) ** 2 + (

@@ -111,12 +111,6 @@ CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o: /home/kist/minicon
 CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o: /home/kist/miniconda3/envs/Franka_Valve/include/python3.8/warnings.h
 CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o: /home/kist/miniconda3/envs/Franka_Valve/include/python3.8/weakrefobject.h
 
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o: ../simulate/glfw_dispatch.cc
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o: ../simulate/glfw_dispatch.h
-CMakeFiles/franka_emika_lib_py.dir/simulate/glfw_dispatch.cc.o: /home/kist/miniconda3/envs/Franka_Valve/include/GLFW/glfw3.h
-
-CMakeFiles/franka_emika_lib_py.dir/simulate/main.cpp.o: ../simulate/main.cpp
-
 CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o: ../include/custommath.h
 CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o: ../include/robotmodel.h
 CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o: ../simulate/robotmodel.cpp
