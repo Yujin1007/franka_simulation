@@ -1,4 +1,5 @@
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/rebuild_cache.dir
+/home/kist/Desktop/franka_simulation/build/CMakeFiles/test.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/controller.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/edit_cache.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/NightlyMemCheck.dir
@@ -9,7 +10,6 @@
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/NightlyMemoryCheck.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/ExperimentalTest.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/ContinuousUpdate.dir
-/home/kist/Desktop/franka_simulation/build/CMakeFiles/build_test.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/NightlyUpdate.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/ExperimentalMemCheck.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/ExperimentalSubmit.dir
@@ -17,8 +17,6 @@
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/ContinuousCoverage.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/ExperimentalConfigure.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/Continuous.dir
-/home/kist/Desktop/franka_simulation/build/CMakeFiles/test.dir
-/home/kist/Desktop/franka_simulation/build/CMakeFiles/franka_emika_panda.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/Nightly.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/NightlySubmit.dir
 /home/kist/Desktop/franka_simulation/build/CMakeFiles/NightlyStart.dir

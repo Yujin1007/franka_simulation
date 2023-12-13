@@ -67,17 +67,6 @@ rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
@@ -88,6 +77,17 @@ test:
 test/fast: test
 
 .PHONY : test/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -239,19 +239,6 @@ ContinuousUpdate/fast:
 .PHONY : ContinuousUpdate/fast
 
 #=============================================================================
-# Target rules for targets named build_test
-
-# Build rule for target.
-build_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 build_test
-.PHONY : build_test
-
-# fast build rule for target.
-build_test/fast:
-	$(MAKE) -f CMakeFiles/build_test.dir/build.make CMakeFiles/build_test.dir/build
-.PHONY : build_test/fast
-
-#=============================================================================
 # Target rules for targets named NightlyUpdate
 
 # Build rule for target.
@@ -341,19 +328,6 @@ Continuous: cmake_check_build_system
 Continuous/fast:
 	$(MAKE) -f CMakeFiles/Continuous.dir/build.make CMakeFiles/Continuous.dir/build
 .PHONY : Continuous/fast
-
-#=============================================================================
-# Target rules for targets named franka_emika_panda
-
-# Build rule for target.
-franka_emika_panda: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 franka_emika_panda
-.PHONY : franka_emika_panda
-
-# fast build rule for target.
-franka_emika_panda/fast:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/build
-.PHONY : franka_emika_panda/fast
 
 #=============================================================================
 # Target rules for targets named Nightly
@@ -544,8 +518,6 @@ simulate/controller.o: simulate/controller.cpp.o
 # target to build an object file
 simulate/controller.cpp.o:
 	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/simulate/controller.cpp.o
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.o
-	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o
 .PHONY : simulate/controller.cpp.o
 
 simulate/controller.i: simulate/controller.cpp.i
@@ -555,8 +527,6 @@ simulate/controller.i: simulate/controller.cpp.i
 # target to preprocess a source file
 simulate/controller.cpp.i:
 	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/simulate/controller.cpp.i
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.i
-	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.i
 .PHONY : simulate/controller.cpp.i
 
 simulate/controller.s: simulate/controller.cpp.s
@@ -566,39 +536,7 @@ simulate/controller.s: simulate/controller.cpp.s
 # target to generate assembly for a file
 simulate/controller.cpp.s:
 	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/simulate/controller.cpp.s
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/controller.cpp.s
-	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.s
 .PHONY : simulate/controller.cpp.s
-
-simulate/main.o: simulate/main.cpp.o
-
-.PHONY : simulate/main.o
-
-# target to build an object file
-simulate/main.cpp.o:
-	$(MAKE) -f CMakeFiles/build_test.dir/build.make CMakeFiles/build_test.dir/simulate/main.cpp.o
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.o
-.PHONY : simulate/main.cpp.o
-
-simulate/main.i: simulate/main.cpp.i
-
-.PHONY : simulate/main.i
-
-# target to preprocess a source file
-simulate/main.cpp.i:
-	$(MAKE) -f CMakeFiles/build_test.dir/build.make CMakeFiles/build_test.dir/simulate/main.cpp.i
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.i
-.PHONY : simulate/main.cpp.i
-
-simulate/main.s: simulate/main.cpp.s
-
-.PHONY : simulate/main.s
-
-# target to generate assembly for a file
-simulate/main.cpp.s:
-	$(MAKE) -f CMakeFiles/build_test.dir/build.make CMakeFiles/build_test.dir/simulate/main.cpp.s
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/main.cpp.s
-.PHONY : simulate/main.cpp.s
 
 simulate/robotmodel.o: simulate/robotmodel.cpp.o
 
@@ -606,7 +544,6 @@ simulate/robotmodel.o: simulate/robotmodel.cpp.o
 
 # target to build an object file
 simulate/robotmodel.cpp.o:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.o
 	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o
 .PHONY : simulate/robotmodel.cpp.o
 
@@ -616,7 +553,6 @@ simulate/robotmodel.i: simulate/robotmodel.cpp.i
 
 # target to preprocess a source file
 simulate/robotmodel.cpp.i:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.i
 	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.i
 .PHONY : simulate/robotmodel.cpp.i
 
@@ -626,7 +562,6 @@ simulate/robotmodel.s: simulate/robotmodel.cpp.s
 
 # target to generate assembly for a file
 simulate/robotmodel.cpp.s:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/robotmodel.cpp.s
 	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.s
 .PHONY : simulate/robotmodel.cpp.s
 
@@ -636,7 +571,6 @@ simulate/trajectory.o: simulate/trajectory.cpp.o
 
 # target to build an object file
 simulate/trajectory.cpp.o:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.o
 	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o
 .PHONY : simulate/trajectory.cpp.o
 
@@ -646,7 +580,6 @@ simulate/trajectory.i: simulate/trajectory.cpp.i
 
 # target to preprocess a source file
 simulate/trajectory.cpp.i:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.i
 	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.i
 .PHONY : simulate/trajectory.cpp.i
 
@@ -656,7 +589,6 @@ simulate/trajectory.s: simulate/trajectory.cpp.s
 
 # target to generate assembly for a file
 simulate/trajectory.cpp.s:
-	$(MAKE) -f CMakeFiles/franka_emika_panda.dir/build.make CMakeFiles/franka_emika_panda.dir/simulate/trajectory.cpp.s
 	$(MAKE) -f CMakeFiles/franka_emika_lib_py.dir/build.make CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.s
 .PHONY : simulate/trajectory.cpp.s
 
@@ -667,6 +599,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... controller"
 	@echo "... edit_cache"
 	@echo "... NightlyMemCheck"
@@ -677,7 +610,6 @@ help:
 	@echo "... NightlyMemoryCheck"
 	@echo "... ExperimentalTest"
 	@echo "... ContinuousUpdate"
-	@echo "... build_test"
 	@echo "... NightlyUpdate"
 	@echo "... ExperimentalMemCheck"
 	@echo "... ExperimentalSubmit"
@@ -685,8 +617,6 @@ help:
 	@echo "... ContinuousCoverage"
 	@echo "... ExperimentalConfigure"
 	@echo "... Continuous"
-	@echo "... test"
-	@echo "... franka_emika_panda"
 	@echo "... Nightly"
 	@echo "... NightlySubmit"
 	@echo "... NightlyStart"
@@ -704,9 +634,6 @@ help:
 	@echo "... simulate/controller.o"
 	@echo "... simulate/controller.i"
 	@echo "... simulate/controller.s"
-	@echo "... simulate/main.o"
-	@echo "... simulate/main.i"
-	@echo "... simulate/main.s"
 	@echo "... simulate/robotmodel.o"
 	@echo "... simulate/robotmodel.i"
 	@echo "... simulate/robotmodel.s"

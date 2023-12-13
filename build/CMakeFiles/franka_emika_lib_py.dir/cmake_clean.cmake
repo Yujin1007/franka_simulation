@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o"
   "CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o"
   "CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o"
   "libfranka_emika_lib_py.a"

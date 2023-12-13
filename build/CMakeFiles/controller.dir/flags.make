@@ -6,5 +6,5 @@ CXX_FLAGS = -fPIC -fvisibility=hidden   -flto -fno-fat-lto-objects -std=gnu++17
 
 CXX_DEFINES = -DMJSIMULATE_STATIC -Dcontroller_EXPORTS
 
-CXX_INCLUDES = -I/home/kist/Desktop/franka_simulation/include -I/usr/include/python3.8 -isystem /home/kist/miniconda3/envs/Franka_Valve/include -isystem /home/kist/miniconda3/envs/Franka_Valve/include/python3.8 -isystem /usr/include/eigen3 
+CXX_INCLUDES = -I/home/kist/Desktop/franka_simulation/include -isystem /home/kist/miniconda3/envs/Franka_Valve/include -isystem /home/kist/miniconda3/envs/Franka_Valve/include/python3.8 -isystem /usr/include/eigen3 
 

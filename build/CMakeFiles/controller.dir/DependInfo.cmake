@@ -17,7 +17,6 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
-  "/usr/include/python3.8"
   "/home/kist/miniconda3/envs/Franka_Valve/include"
   "/home/kist/miniconda3/envs/Franka_Valve/include/python3.8"
   "/usr/include/eigen3"

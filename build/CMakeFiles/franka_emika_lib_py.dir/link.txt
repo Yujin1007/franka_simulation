@@ -1,2 +1,2 @@
-/usr/bin/ar qc libfranka_emika_lib_py.a  CMakeFiles/franka_emika_lib_py.dir/simulate/controller.cpp.o CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o
+/usr/bin/ar qc libfranka_emika_lib_py.a  CMakeFiles/franka_emika_lib_py.dir/simulate/robotmodel.cpp.o CMakeFiles/franka_emika_lib_py.dir/simulate/trajectory.cpp.o
 /usr/bin/ranlib libfranka_emika_lib_py.a
