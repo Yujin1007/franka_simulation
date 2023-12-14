@@ -1,4 +1,5 @@
 import os
+import json
 from abc import *
 from time import sleep
 
@@ -7,11 +8,23 @@ import numpy as np
 from numpy.linalg import inv
 from scipy.spatial.transform import Rotation as R
 
-import utils.tools as tools
+from utils import tools
 import mujoco
 from mujoco import viewer
 import gym
 from gym import spaces
+
+# Import requried libraries
+from utils import find_libraries
+rbdl_path, urdfreader_path = find_libraries.find_libraries()
+
+try:
+    from controller.full_action import controller
+except ImportError as ie:
+    print("Register rbdl and rbdl_urdfreader to PATH")
+    print(f"rbdl path : {rbdl_path}")
+    print(f"urdfreader path : {urdfreader_path}")
+    exit()
 
 # Constants
 BODY = 1
@@ -25,25 +38,10 @@ MANUAL = 1
 
 HOME = os.getcwd()
 
-from utils import find_libraries
-rbdl_path, urdfreader_path = find_libraries.find_libraries()
-
-try:
-    from controller.full_action import controller
-except ImportError as ie:
-    print("Register rbdl and rbdl_urdfreader to PATH")
-    print(f"rbdl path : {rbdl_path}")
-    print(f"urdfreader path : {urdfreader_path}")
-    exit()
-
-
 def BringClassifier(path):
     classifier = torch.load(path)
     classifier.eval()
     return classifier
-
-# TODO : Parent Class 만들어 공통되는 내용 정리, 차별점 있는 부분만 상속
-# TODO : 경로 정리
 
 class Fr3:
     metadata = {"render_modes": ["human"], "render_fps": 30}
@@ -60,7 +58,7 @@ class Fr3:
         self.stack = 5
 
     def import_model(self):
-        model_path = os.path.join("..", "model", "franka_emika_panda", "scene_valve.xml")
+        model_path = os.path.join("franka_emika_panda", "scene_valve.xml")
         return mujoco.MjModel.from_xml_path(model_path)
 
     @abstractmethod
@@ -170,44 +168,7 @@ class Fr3_with_model(Fr3):
         self.classifier_clk = BringClassifier(os.path.join("classifier", "clk", "model.pt"))
         self.classifier_cclk = BringClassifier(os.path.join("classifier", "cclk", "model.pt"))
 
-        # TODO : json 파일로 따로 저장
-        desired_contact_list = ["finger_contact0", "finger_contact1",
-                                "finger_contact2", "finger_contact3", "finger_contact4", "finger_contact5",
-                                "finger_contact6", "finger_contact7",
-                                "finger_contact8", "finger_contact9", "finger0_contact", "finger1_contact",
-                                "handle_contact0", "handle_contact1", "handle_contact2", "handle_contact3",
-                                "handle_contact4", "handle_contact5", "handle_contact6", "handle_contact7",
-                                "handle_contact8", "handle_contact9", "handle_contact10", "handle_contact11",
-                                "handle_contact12", "handle_contact13", "handle_contact14", "handle_contact15",
-                                "handle_contact16", "handle_contact17",
-                                "finger_contact18", "finger_contact19", "handle_contact20", "handle_contact21",
-                                "handle_contact22", "handle_contact23", "valve_contact0", "valve_contact1"]
-        desired_contact_list_finger = ["finger_contact1",
-                                       "finger_contact2", "finger_contact3", "finger_contact4",
-                                       "finger_contact6", "finger_contact7",
-                                       "finger_contact8", "finger_contact9", ]
-        desired_contact_list_obj = [ "handle_contact0", "handle_contact1",
-                                "handle_contact2", "handle_contact3",
-                                 "handle_contact5", "handle_contact6",
-                                "handle_contact8",  "handle_contact10", "handle_contact11",
-                                "handle_contact12", "handle_contact15",
-                                "handle_contact16",  "handle_contact21",
-                                "handle_contact22", "handle_contact23", "valve_contact0"]
-
-        robot_contact_list = ["link0_contact", "link1_contact", "link2_contact", "link3_contact", \
-                                   "link4_contact", "link5_contact0", "link5_contact1", "link5_contact2", \
-                                   "link6_contact", "link7_contact", "hand_contact", "finger0_contact", \
-                                   "finger1_contact", "finger_contact0", "finger_contact1", "finger_contact2",\
-                                   "finger_contact3", "finger_contact4", "finger_contact5", "finger_contact6",\
-                                   "finger_contact7", "finger_contact8", "finger_contact9"]
-
-        object_contact_list = ["handle_contact0", "handle_contact1", "handle_contact2", "handle_contact3", \
-                                    "handle_contact4", "handle_contact5", "handle_contact6", "handle_contact7", \
-                                    "handle_contact8", "handle_contact9", "valve_contact0",\
-                                    "valve_contact0", "valve_contact1", "valve_contact2", "valve_contact3",\
-                                    "valve_contact4", "valve_contact5", "valve_contact6", "valve_contact7",\
-                                    "valve_contact8", "valve_contact9", "valve_contact10", "valve_contact11",\
-                                    "valve_contact12", "valve_contact13", "valve_contact0"]
+        desired_contact_list, desired_contact_list_finger, desired_contact_list_obj, robot_contact_list, object_contact_list = self.read_contact_json()
 
         self.desired_contact_bid = tools.name2id(self.model, GEOM, desired_contact_list)
         self.desired_contact_finger_bid = tools.name2id(self.model, GEOM, desired_contact_list_finger)
@@ -218,6 +179,20 @@ class Fr3_with_model(Fr3):
         self.ADR_threshold = 20
         self.ADR_cnt = 0
         self.ADR_object = 1
+
+    # Read json file of contact information
+    def read_contact_json(self):
+        json_path = os.path.join(HOME, "fr3_envs", "jsons", "contact_fr3_with_pt.json")
+        with open(json_path, 'r') as json_file:
+            json_data = json.load(json_file)
+
+        desired_contact_list = json_data["desired_contact_list"]
+        desired_contact_list_finger = json_data["desired_contact_list_finger"]
+        desired_contact_list_obj = json_data["desired_contact_list_obj"]
+        robot_contact_list = json_data["robot_contact_list"]
+        object_contact_list = json_data["object_contact_list"]
+
+        return desired_contact_list, desired_contact_list_finger, desired_contact_list_obj, robot_contact_list, object_contact_list
 
     def run(self, iteration):
         if self.viewer is None:

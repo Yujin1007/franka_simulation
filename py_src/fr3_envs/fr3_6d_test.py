@@ -6,8 +6,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 import mujoco
-import utils.rotations as rotations
-import utils.tools as tools
+from utils import rotations, tools
 
 import fr3_envs.fr3 as fr3
 
