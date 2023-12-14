@@ -19,7 +19,7 @@ from utils import find_libraries
 rbdl_path, urdfreader_path = find_libraries.find_libraries()
 
 try:
-    from controller.full_action import controller
+    from cpp_library import controller
 except ImportError as ie:
     print("Register rbdl and rbdl_urdfreader to PATH")
     print(f"rbdl path : {rbdl_path}")

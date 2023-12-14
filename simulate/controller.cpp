@@ -1,5 +1,3 @@
-
-
 #include "controller.h"
 #include <chrono>
 #include <vector>
@@ -12,9 +10,6 @@
 #include <string> // getline header
 #include <math.h>
 #include <time.h>
-// #include <torch/extension.h>
-// #include <torch/torch.h>
-// #include <torch/script.h>
 
 CController::CController(int JDOF)
 {
@@ -600,27 +595,6 @@ Vector3d CController::AddTorque()
 	tangential_vector = _Tur * tangential_vector; // robot
 
 	return tangential_vector.head(3);
-}
-
-void CController::load_model()
-{
-
-	//   cout << "PyTorch version: "
-	// 	<< TORCH_VERSION_MAJOR << "."
-	// 	<< TORCH_VERSION_MINOR << "."
-	// 	<< TORCH_VERSION_PATCH << std::endl;
-
-	// torch::jit::script::Module module;
-	// try {
-	//     // Load the TorchScript model
-	//     module = torch::jit::load("/home/kist-robot2/catkin_ws/src/franka_emika_panda/py_src/RL_actor.pt");
-	// } catch (const c10::Error& e) {
-	//     std::cerr << "Error loading the model: " << e.msg() << std::endl;
-
-	// }
-	// torch::Tensor input_tensor = torch::ones({1, 139});
-	// at::Tensor output = module.forward({input_tensor}).toTensor();
-	// std::cout << "Output tensor: " << output << std::endl;
 }
 
 Matrix3d CController::R3D(Objects obj, Vector3d unitVec, double angle)
@@ -1869,8 +1843,6 @@ void CController::Initialize()
 
 	
 	_generate_dxyz = false;
-
-	load_model();
 }
 
 namespace py = pybind11;
