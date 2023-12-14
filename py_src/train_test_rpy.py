@@ -9,7 +9,7 @@ from tqc_savemodel import TQCsm
 
 # from sb3_contrib.tqcsm.tqc_savemodel import TQCsm
 
-import _fr3Env
+import fr3_envs._fr3Env as _fr3Env
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np

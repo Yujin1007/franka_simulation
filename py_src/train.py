@@ -167,7 +167,7 @@ from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 
 from tqc_savemodel import TQCsm
 
-import _fr3Env
+import fr3_envs._fr3Env as _fr3Env
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
