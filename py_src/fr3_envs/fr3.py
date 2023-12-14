@@ -7,7 +7,7 @@ import numpy as np
 from numpy.linalg import inv
 from scipy.spatial.transform import Rotation as R
 
-import tools
+import utils.tools as tools
 import mujoco
 from mujoco import viewer
 import gym

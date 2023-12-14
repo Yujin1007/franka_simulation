@@ -4,7 +4,7 @@ from random import random, randint
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-import tools
+import utils.tools as tools
 import mujoco
 import gym
 from gym import spaces

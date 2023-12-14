@@ -5,9 +5,9 @@ import torch
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-import tools
 import mujoco
-import rotations
+import utils.rotations as rotations
+import utils.tools as tools
 
 import fr3_envs.fr3 as fr3
 

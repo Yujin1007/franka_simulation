@@ -12,8 +12,8 @@ from random import random, randint, uniform
 from scipy.spatial.transform import Rotation as R
 from mujoco import viewer
 from time import sleep
-import tools
-import rotations
+import py_src.utils.tools as tools
+import py_src.utils.rotations as rotations
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
