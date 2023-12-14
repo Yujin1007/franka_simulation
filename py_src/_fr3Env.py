@@ -13,7 +13,18 @@ import torch
 import os
 from abc import *
 
-from controller.full_action import controller
+HOME = os.getcwd()
+
+from utils import find_libraries
+rbdl_path, urdfreader_path = find_libraries.find_libraries()
+
+try:
+    from controller.full_action import controller
+except ImportError as ie:
+    print("Register rbdl and rbdl_urdfreader to PATH")
+    print(f"rbdl path : {rbdl_path}")
+    print(f"urdfreader path : {urdfreader_path}")
+    exit()
 
 BODY = 1
 JOINT = 3
@@ -23,8 +34,6 @@ TASK_SPACE_TIME = 3+1+0.5
 
 RL = 2
 MANUAL = 1
-
-HOME = os.getcwd()
 
 def BringClassifier(path):
     classifier = torch.load(path)
@@ -155,8 +164,9 @@ class fr3_with_model(fr3):
         self.q_init = [0.374, -1.02, 0.245, -1.51, 0.0102, 0.655, 0.3, 0.04, 0.04, 0, 0]
         self.episode_number = -1
 
-        self.classifier_clk = BringClassifier("./classifier/clk/model.pt")
-        self.classifier_cclk = BringClassifier("./classifier/cclk/model.pt")
+        os.chdir(HOME)
+        self.classifier_clk = BringClassifier(os.path.join("classifier", "clk", "model.pt"))
+        self.classifier_cclk = BringClassifier(os.path.join("classifier", "cclk", "model.pt"))
 
         # TODO : json 파일로 따로 저장
         desired_contact_list = ["finger_contact0", "finger_contact1",
