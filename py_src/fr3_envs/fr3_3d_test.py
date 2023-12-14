@@ -8,7 +8,7 @@ from scipy.spatial.transform import Rotation as R
 import mujoco
 from utils import rotations, tools
 
-import fr3_envs.fr3 as fr3
+import fr3_envs.fr3_rpy as fr3_rpy
 
 # Constants
 BODY = 1
@@ -19,10 +19,11 @@ TASK_SPACE_TIME = 3+1+0.5
 
 RL = 2
 MANUAL = 1
+RPY = False
 
-class Fr3_3d_test(fr3.Fr3_with_model):
+class Fr3_3d_test(fr3_rpy.Fr3_rpy):
     def __init__(self):
-        super().__init__()
+        super().__init__("frd_3d_test")
 
     def reset(self, direction=None):
         self.control_mode = 0
@@ -56,9 +57,9 @@ class Fr3_3d_test(fr3.Fr3_with_model):
             self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
                                  self.model.opt.timestep, self.data.xpos.reshape(66, ))
             if self.episode_number % 2 == 0:
-                self.controller.randomize_env(self.r, self.obj, self.init_angle, self.goal_angle, RL)
+                self.controller.randomize_env(self.r, self.obj, self.init_angle, self.goal_angle, RL, RPY)
             else:
-                self.controller.randomize_env(self.r, self.obj, self.init_angle, self.goal_angle, MANUAL)
+                self.controller.randomize_env(self.r, self.obj, self.init_angle, self.goal_angle, MANUAL, RPY)
             self.controller.control_mujoco()
             self.start_time = self.data.time
 
@@ -117,50 +118,7 @@ class Fr3_3d_test(fr3.Fr3_with_model):
         # drpy = tools.orientation_6d_to_euler(action)
         # print(drpy)
         drpy = action
-        while self.control_mode != 4:
-            self.control_mode = self.controller.control_mode()
-            # self.control_mode = 0
-            self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
-                                 self.model.opt.timestep, self.data.xpos.reshape(66, ))
-            self.controller.control_mujoco()
-            self._torque, self.max_rotation = self.controller.write()
-            for i in range(self.dof-1):
-                self.data.ctrl[i] = self._torque[i]
-
-            mujoco.mj_step(self.model, self.data)
-            done = self._done()
-            if done:
-                break
-            if self.rendering:
-                self.render()
-                # sleep(0.002)
-        for j in range(100): # 1000hz -> 10hz
-
-            self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
-                                 self.model.opt.timestep, self.data.xpos.reshape(66, ))
-            if j<10:
-                drpy_tmp = (drpy - self.drpy_pre)/10 * j + self.drpy_pre
-                self.controller.put_action(drpy_tmp)
-            else:
-                self.controller.put_action(drpy)
-            # self.controller.put_action(action)
-
-            # calculate x_des_hand.head(3) and generate control torque
-            self.controller.control_mujoco()
-
-            # take action
-
-            self._torque, self.max_rotation = self.controller.write()
-            for i in range(self.dof-1):
-                self.data.ctrl[i] = self._torque[i]
-
-            mujoco.mj_step(self.model, self.data)
-            done = self._done()
-            if done:
-                break
-            if self.rendering:
-                self.render()
-
+        self.run_step(drpy)
 
         ee = self.controller.get_ee()
         rpy_des = self.controller.desired_rpy()
@@ -173,108 +131,24 @@ class Fr3_3d_test(fr3.Fr3_with_model):
         self.action_pre = action
 
         return obs, reward, done, info
-
-    def _observation(self, end_effector, rpy_des):
-
-        # stack observations
-        self.obs_q[1:] = self.obs_q[:-1]
-        self.obs_xyzdes[1:] = self.obs_xyzdes[:-1]
-        self.obs_xyz[1:] = self.obs_xyz[:-1]
-        self.obs_rpy[1:] = self.obs_rpy[:-1]
-        self.obs_rpy_des[1:] = self.obs_rpy_des[:-1]
-
-        q_unscaled = self.data.qpos[0:self.k]
-        q = (q_unscaled-self.q_range[:,0]) / (self.q_range[:,1] - self.q_range[:,0]) * (1-(-1)) - 1
-        self.obs_q[0] = q
-        rpy = end_effector[1][3:6]
-        jacobian = np.array(end_effector[2])
-
-        self.obs_xyzdes[0] = end_effector[0]
-        self.obs_xyz[0] = end_effector[1][0:3]
-        self.obs_rpy[0] = rpy
-        self.obs_rpy_des[0] = rpy_des
-        self.obs_manipulability[0] = tools.calc_manipulability(jacobian)
-        # print(np.round(self.obs_manipulability[0]))
-        # print(max(self.obs_manipulability[0]), min(self.obs_manipulability[0]),"\n")
-        observation = dict(object=self.obs_object,q=self.obs_q,rpy=self.obs_rpy, rpy_des=self.obs_rpy_des, x_plan=self.obs_xyzdes, x_pos=self.obs_xyz)
-        self.save_frame_data(end_effector)
-        return observation
     
     def _reward(self,action):
         reward_acc = np.exp(-sum(abs(action - self.action_pre))) #max = -12 * const
         reward_xyz = np.exp(-2*sum(abs(self.obs_xyz[0] - self.obs_xyzdes[0])))
         reward_rpy = np.exp(-2 * sum(abs(rotations.subtract_euler(self.obs_rpy_des[0], self.obs_rpy[0]))))
 
-        # print(reward_rpy)
-        reward_time = 0
-        reward_grasp = 0
-        reward_contact = 0
-        reward_bound = 0
-        if self.time_done:
-            reward_time = 1
-
-        if self.data.time - self.start_time >= TASK_SPACE_TIME: # 잡은 이후
-            if not -1 in self.contact_list:
-                reward_grasp = -2+len(self.grasp_list) # grasp_list max = 8 : finger parts.
-        if self.contact_done:
-            reward_contact = -1
-        if self.bound_done:
-            reward_bound = -1
-
-        reward = self.rw_acc*reward_acc\
-                 +self.rw_xyz*reward_xyz\
-                 +self.rw_t*reward_time\
-                 +self.rw_gr*reward_grasp\
-                 +self.rw_c*reward_contact\
-                 +self.rw_b*reward_bound\
-                + self.rw_rpy*reward_rpy
-        # print("reward : ", reward, "acc:",reward_acc," |xyz:",reward_xyz," |rpy:",reward_rpy," |grasp:",reward_grasp)
+        reward = self.update_reward(reward_acc, reward_xyz, reward_rpy)
         return reward
 
     def env_randomization(self):
         obj_list = ["handle", "valve"]
         radius_list = [0.119, 0.1]
         o = randint(0,1)
-        o=0
+        o = 0
         obj = obj_list[o]
         radius = radius_list[o]
-        handle_quat_candidate = [[0.25192415, -0.64412663, 0.57897236, 0.4317709],
-                                 [-0.49077636, 0.42062713, -0.75930974, 0.07523369],
-                                 [0.474576307745582, -0.089013785474907, 0.275616460318178, 0.831197594392378],
-                                 [0., -0.707, 0.707, 0.],
-                                 [-0.46086475, -0.63305975, 0.39180338, 0.48304156],
-                                 [-0.07865809, -0.89033475, 0.16254433, -0.41796684],
-                                 [0.70738827, 0., 0., 0.70682518]]
-        handle_pos_candidate = [[0.52, 0, 0.8],
-                                [0.38, 0, 0.9],
-                                [0.326, 0.232, 0.559+0.35],
-                                [0.55, 0., 0.75],
-                                [0.4, 0.3, 0.5],
-                                [0.35, 0.45, 0.9],
-                                [0.48, 0, 0.9]]
-        valve_quat_candidate = [[0., 1., 0., 0.],
-                                [-0.707, 0.707, 0., 0.],
-                                [0., -0.707, 0.707, 0.],
-                                [0., -0.707, 0.707, 0.],
-                                [0., 0.707, - 0., 0.707],
-                                [-0.707, 0.707, 0., 0.],
-                                [0., 1., 0., 0.]]
-        valve_pos_candidate = [[0.38, 0., 0.45],
-                               [-0.2, 0.5, 0.6],
-                               [0.28, 0., 0.7],
-                               [0.38, 0., 0.5],
-                               [0.48, 0., 0.55],
-                               [0.3, 0.3, 0.6],
-                               [0.3, 0.3, 0.6]]
-        if obj == "handle":
-            nobj = "valve"
-            quat_candidate = handle_quat_candidate
-            pos_candidate = handle_pos_candidate
-        elif obj == "valve":
-            nobj = "handle"
-            quat_candidate = valve_quat_candidate
-            pos_candidate = valve_pos_candidate
 
+        quat_candidate, pos_candidate, nobj = self.read_candidate_json(obj, "candidate_rpy.json")
         bid = mujoco.mj_name2id(self.model, BODY, obj)
         nbid = mujoco.mj_name2id(self.model, BODY, nobj)
 

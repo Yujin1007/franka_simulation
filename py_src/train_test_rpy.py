@@ -115,7 +115,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env", help="Environment", type=str, default="full_action", choices=["6d_train", "6d_test", "3d_test"])
+    parser.add_argument("--env", help="Environment", type=str, default="6d_test", choices=["6d_train", "6d_test", "3d_test"])
     args = parser.parse_args()
 
     main(args)

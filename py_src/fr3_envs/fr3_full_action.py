@@ -22,6 +22,8 @@ TASK_SPACE_TIME = 3+1+0.5
 
 RL = 2
 MANUAL = 1
+RPY = False
+XYZRPY = True
 
 HOME = os.getcwd()
 
@@ -57,7 +59,8 @@ class Fr3_full_action(fr3.Fr3):
         # self.read_file()
         self.episode_number = 0
 
-        desired_contact_list, desired_contact_list_finger, desired_contact_list_obj, robot_contact_list, object_contact_list = self.read_contact_json()
+        desired_contact_list, desired_contact_list_finger, desired_contact_list_obj,\
+        robot_contact_list, object_contact_list = self.read_contact_json("contact_full_action.json")
 
         self.desired_contact_bid = tools.name2id(self.model, GEOM, desired_contact_list)
         self.desired_contact_finger_bid = tools.name2id(self.model, GEOM, desired_contact_list_finger)
@@ -66,20 +69,6 @@ class Fr3_full_action(fr3.Fr3):
         self.object_contact_bid = tools.name2id(self.model, GEOM, object_contact_list)
 
         self.T_vv = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]])
-
-    # Read json file of contact information
-    def read_contact_json(self):
-        json_path = os.path.join(HOME, "fr3_envs", "jsons", "contact_vanilla_fr3.json")
-        with open(json_path, 'r') as json_file:
-            json_data = json.load(json_file)
-
-        desired_contact_list = json_data["desired_contact_list"]
-        desired_contact_list_finger = json_data["desired_contact_list_finger"]
-        desired_contact_list_obj = json_data["desired_contact_list_obj"]
-        robot_contact_list = json_data["robot_contact_list"]
-        object_contact_list = json_data["object_contact_list"]
-
-        return desired_contact_list, desired_contact_list_finger, desired_contact_list_obj, robot_contact_list, object_contact_list
 
     def reset(self):
         self.controller.initialize()
@@ -97,8 +86,8 @@ class Fr3_full_action(fr3.Fr3):
 
         self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
                              self.model.opt.timestep, self.data.xpos.reshape(66, ))
-
-        self.controller.randomize_env(r, obj, self.init_angle, self.goal_angle, RL)
+        
+        self.controller.randomize_env(r, obj, self.data.xpos[:22].reshape(66, ), self.init_angle, self.goal_angle, RL, XYZRPY)
         self.controller.control_mujoco()
         self.start_time = self.data.time
 
@@ -117,7 +106,7 @@ class Fr3_full_action(fr3.Fr3):
         self.obs_xyz_dot = np.zeros([self.stack, 3])
         self.obs_object = np.zeros([1, 17])
 
-        end_effector = self.controller.get_ee_simple()
+        end_effector = self.controller.get_ee()
         # end_effector = np.zeros((2,6))
         _ = self._observation(end_effector)
         self.distance_init = np.sqrt(
@@ -181,7 +170,7 @@ class Fr3_full_action(fr3.Fr3):
                 self.render()
 
 
-        ee = self.controller.get_ee_simple()
+        ee = self.controller.get_ee()
         obs = self._observation(ee)
         done = self._done()
         reward = self._reward(action)
@@ -389,44 +378,8 @@ class Fr3_full_action(fr3.Fr3):
         obj = obj_list[o]
         o_margin = o_margin_list[o]
         radius = radius_list[o]
-        handle_quat_candidate = [[0.25192415, -0.64412663, 0.57897236, 0.4317709],
-                                 [-0.49077636, 0.42062713, -0.75930974, 0.07523369],
-                                 [0.474576307745582, -0.089013785474907, 0.275616460318178, 0.831197594392378],
-                                 [0., -0.707, 0.707, 0.],
-                                 [-0.46086475, -0.63305975, 0.39180338, 0.48304156],
-                                 [-0.07865809, -0.89033475, 0.16254433, -0.41796684],
-                                 [0.70738827, 0., 0., 0.70682518]]
-        handle_pos_candidate = [[0.52, 0, 0.8],
-                                [0.38, 0, 0.9],
-                                [0.326, 0.232, 0.559],
-                                [0.55, 0., 0.75],
-                                [0.4, 0.3, 0.5],
-                                [0.35, 0.45, 0.9],
-                                [0.48, 0, 0.9]]
-        valve_quat_candidate = [[0., 1., 0., 0.],
-                                [-0.707, 0.707, 0., 0.],
-                                [0., -0.707, 0.707, 0.],
-                                [0., -0.707, 0.707, 0.],
-                                [0., 0.707, - 0., 0.707],
-                                [-0.707, 0.707, 0., 0.],
-                                [0., 1., 0., 0.]]
-        valve_pos_candidate = [[0.38, 0., 0.45],
-                               [-0.2, 0.5, 0.6],
-                               [0.28, 0., 0.7],
-                               [0.38, 0., 0.5],
-                               [0.48, 0., 0.55],
-                               [0.3, 0.3, 0.6],
-                               [0.3, 0.3, 0.6]]
 
-        if obj == "handle":
-            nobj = "valve"
-            quat_candidate = handle_quat_candidate
-            pos_candidate = handle_pos_candidate
-        elif obj == "valve":
-            nobj = "handle"
-            quat_candidate = valve_quat_candidate
-            pos_candidate = valve_pos_candidate
-
+        quat_candidate, pos_candidate, nobj = self.read_candidate_json(obj, "candidate_full_action.json")
         bid = mujoco.mj_name2id(self.model, BODY, obj)
         nbid = mujoco.mj_name2id(self.model, BODY, nobj)
 

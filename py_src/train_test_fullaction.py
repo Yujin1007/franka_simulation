@@ -2,12 +2,32 @@ import os
 import numpy as np
 from sb3_contrib import TQC
 import fr3_envs.fr3_full_action as fr3_full_action
+import fr3_envs.fr3_6d_test as fr3_6d_test
+import fr3_envs.fr3_6d_train as fr3_6d_train
+import fr3_envs.fr3_3d_test as fr3_3d_test
 
 HOME = os.getcwd()
 
+import torch.nn as nn
+import torch.nn.functional as F
+class Classifier(nn.Module):
+    def __init__(self, input_size, output_size):
+        super(Classifier, self).__init__()
+        self.fc1 = nn.Linear(input_size, 256)
+        self.fc2 = nn.Linear(256, 120)
+        self.fc3 = nn.Linear(120, 84)
+        self.fc4 = nn.Linear(84, output_size)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+        x = self.fc4(x)
+        return x
+
 def main():
     total_timestep = 5e6
-    MODEL_PATH = os.path.join("log", "full_action", "TQC_5", "step_900103.zip")
+    MODEL_PATH = os.path.join("log", "parameters.zip")
 
     istrain =  False
     isrendering =True
@@ -15,7 +35,10 @@ def main():
     isheuristic = False
 
     # Import the environment
-    env = fr3_full_action.Fr3_full_action()
+    # env = fr3_full_action.Fr3_full_action()
+    # env = fr3_6d_test.Fr3_6d_test()
+    env = fr3_6d_train.Fr3_6d_train()
+    # env = fr3_3d_test.Fr3_3d_test()
     env.env_rand = israndomenv
     env.rendering = isrendering
     # env.reset()

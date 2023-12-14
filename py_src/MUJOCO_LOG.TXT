@@ -5563,3 +5563,6 @@ WARNING: mju_openResource: unknown file './'
 Wed Dec 13 14:37:14 2023
 WARNING: mju_openResource: unknown file '/home/kist-robot2/catkin_ws/src/franka_emika_panda/model/franka_emika_panda/scene_valve.xml'
 
+Thu Dec 14 17:18:54 2023
+WARNING: mju_openResource: unknown file '/home/kist-robot2/catkin_ws/src/franka_emika_panda/model/franka_emika_panda/scene_valve.xml'
+

@@ -17,7 +17,7 @@ from sb3_contrib.common.utils import quantile_huber_loss
 from sb3_contrib.tqc.policies import TQCPolicy
 
 from stable_baselines3.common.base_class import BaseAlgorithm
-from stable_baselines3.common.buffers import DictReplayBuffer, ReplayBuffer, DictReplayBuffer_YJ
+from stable_baselines3.common.buffers import DictReplayBuffer, ReplayBuffer
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.noise import ActionNoise, VectorizedActionNoise
 from stable_baselines3.common.policies import BasePolicy
@@ -224,16 +224,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 replay_buffer=replay_buffer,
                 **self.replay_buffer_kwargs,
             )
-        elif self.replay_buffer_class == DictReplayBuffer_YJ:
-            self.replay_buffer = DictReplayBuffer_YJ(
-                self.buffer_size,
-                self.observation_space,
-                self.action_space,
-                device=self.device,
-                n_envs=self.n_envs,
-                optimize_memory_usage=self.optimize_memory_usage,
-                **self.replay_buffer_kwargs,
-            )
+
         if self.replay_buffer is None:
             self.replay_buffer = self.replay_buffer_class(
                 self.buffer_size,
@@ -1105,7 +1096,6 @@ class TQCsm_new(OffPolicyAlgorithm):
 
     def _setup_model(self) -> None:
         super(TQCsm_new, self)._setup_model()
-        self.replay_buffer_class = DictReplayBuffer_YJ
         self._create_aliases()
 
         # Target entropy is used when learning the entropy coefficient
