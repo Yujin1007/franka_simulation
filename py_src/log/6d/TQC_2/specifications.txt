@@ -1,7 +1,0 @@
-        self.rw_acc = 1  # np.exp(-sum(abs(action - self.action_pre)))
-        self.rw_xyz = 0.1  # np.exp(-2*sum(abs(self.obs_xyz[0] - self.obs_xyzdes[0])))
-        self.rw_t = 1  # time done -> reward_time = 1
-        self.rw_c = 10  # contact done -> -1
-        self.rw_b = 1  # joint boundary done -> -1
-        self.rw_gr = 2.0  # 1/-1 grasp
-        self.rw_rpy = 0.0 # np.exp(-2*sum(abs(rotations.subtract_euler(self.obs_rpy_des, self.obs_rpy))[0]))

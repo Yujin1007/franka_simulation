@@ -35,20 +35,24 @@ public:
     tuple<std::vector<double>, double> write_pybind();
     void put_action_pybind(std::array<double, 3> drpy);
     void put_action2_pybind(std::array<double, 3> drpy,std::array<double, 3> dxyz, double gripper);
-    void randomize_env_pybind(std::array<std::array<double, 3>, 3> rotation_obj, std::string object_name, double init_theta, double goal_theta, int planning_mode);
-    
+    void put_action3_pybind(std::array<double, 5> compensate_force);
+    void randomize_env_pybind(std::array<std::array<double, 3>, 3> rotation_obj, std::string object_name, std::array<double, 66> pos, double init_theta, double goal_theta, int planning_mode,bool generate_dxyz);
+    tuple<std::vector<double>, std::vector<double>> get_force_pybind();
     double control_mode_pybind();
-    tuple<vector<double>,vector<double>, vector<vector<double>>> get_ee_pybind();
-    tuple<vector<double>, vector<double>> get_ee_simple_pybind();
+    // tuple<vector<double>,vector<double>, vector<vector<double>>> get_ee_pybind();
+    tuple<vector<double>, vector<double>, float> get_ee_pybind();
     vector<double> desired_rpy_pybind();
     void TargetRePlan_pybind();
+    void TargetRePlan2_pybind(std::array<double, 7> q_goal);
+    void TargetRePlan3_pybind(std::array<double, 7> q_goal);
     // double TargetPlanRL_pybind(double angle);
     // tuple<double,vector<double>,vector<double>,vector<double>>TargetPlanRL_pybind(double angle);
-    std::vector<double> torque_command;
+    std::vector<double> torque_command, force_command;
     vector<double> x_hand;
 	vector<double> x_plan;
 	vector<double> xdot_hand;
 	vector<double> rpy_des;
+    float gripper_goal;
 	vector<vector<double>> J_hands;
 	
     
@@ -92,6 +96,7 @@ private:
         double gripper;
         double time;
         Vector3d target_velocity;
+        VectorXd q_goal;
         string state;
     };
 
@@ -99,6 +104,7 @@ private:
     void reset_target(double motion_time, VectorXd target_joint_position);
     void reset_target(double motion_time, VectorXd target_joint_position, VectorXd target_joint_velocity);
     void reset_target(double motion_time, Vector3d target_pos, Vector3d target_ori);
+    void reset_target(double motion_time, VectorXd target_joint_position, string state);
     
     //task space control with target velocity 
     void reset_target(double motion_time, Vector3d target_pos, Vector3d target_ori, Vector3d target_velocity);
@@ -131,7 +137,7 @@ private:
     double _dt;
 	double _init_t;
 	double _pre_t;
-
+    VectorXd q_goal;
     double du;
 
     int _planning_mode; //0 : heuristic, 1 : heuristic object random, 2: RL object random
@@ -187,7 +193,8 @@ private:
     Matrix3d _R_des_hand, _R_hand;
     Matrix3d _Rdot_des_hand, _Rdot_hand;
     MatrixXd _lambda;
-    VectorXd _force;
+    VectorXd _force, _compensate_force, _compensated_force;
+    VectorXd _qdot_rl;
 
     MatrixXd _I; // Identity matrix
 
@@ -218,6 +225,7 @@ private:
 	vector<double> _x_plan;
 	vector<double> _y_plan;
 	vector<double> _z_plan;
+    vector<double> compensate_force;
     
     double _theta_des;
     VectorXd accum_err;
@@ -227,7 +235,8 @@ private:
     MatrixXd _kpj_diagonal6, _kdj_diagonal6;
     VectorXd _drpy, _rpy_des, _dxyz;
     VectorXd _x_force;
-    double _gripper_close;
+    vector<VectorXd> _q_goal_data;
+    double _gripper_close, _gripper_open;
     bool _generate_dxyz;
     double _print_time, _print_interval;
 
