@@ -32,16 +32,15 @@ class Fr3_rpy(fr3.Fr3):
 
         ## reward weight
         self.reward_range = None
-        self.rw_acc = 1  # np.exp(-sum(abs(action - self.action_pre)))
-        self.rw_xyz = 0.1  # np.exp(-2*sum(abs(self.obs_xyz[0] - self.obs_xyzdes[0])))
-        self.rw_t = 1  # time done -> reward_time = 1
+        self.rw_acc = 3 if env == "fr3_tqc" else 1  # np.exp(-sum(abs(action - self.action_pre)))
         self.rw_c = 10  # contact done -> -1
         self.rw_b = 1  # joint boundary done -> -1
-        self.rw_gr = 2.0  # 1/-1 grasp
-        self.rw_rpy = 0.0  # np.exp(-2*sum(abs(rotations.subtract_euler(self.obs_rpy_des, self.obs_rpy))[0]))
+        self.rw_gr = 1.0 if env == "fr3_tqc" else 2.0  # 1/-1 grasp
+
         self.viewer = None
         self.env_rand = False
         self.q_range = self.model.jnt_range[:self.k]
+
         self.qdot_init = [0,0,0,0,0,0,0,0,0,0,0]
         self.q_init = [0.374, -1.02, 0.245, -1.51, 0.0102, 0.655, 0.3, 0.04, 0.04, 0, 0]
         self.episode_number = -1
@@ -59,9 +58,22 @@ class Fr3_rpy(fr3.Fr3):
         self.robot_contact_bid = tools.name2id(self.model, GEOM, robot_contact_list)
         self.object_contact_bid = tools.name2id(self.model, GEOM, object_contact_list)
 
-        self.ADR_threshold = 20
-        self.ADR_cnt = 0
-        self.ADR_object = 1
+        # Environments with custom TQC
+        if env == "fr3_tqc":
+            self.direction_state = ["clk","cclk"]
+            self.qdot_range = np.array([[-2.1750, 2.1750], [-2.1750, 2.1750], [-2.1750, 2.1750], [-2.1750, 2.1750],
+                                        [-2.61, 2.61], [-2.61, 2.61], [-2.61, 2.61]])
+            self.q_init = [0, np.deg2rad(-60), 0, np.deg2rad(-90), 0, np.deg2rad(90), np.deg2rad(45),0,0,0,0]
+            self.q_reset = [0, np.deg2rad(-60), 0, np.deg2rad(-90), 0, np.deg2rad(90), np.deg2rad(45),0.04,0.04,0,0]
+        # Environments with stable_baselines
+        else:
+            self.rw_xyz = 0.1  # np.exp(-2*sum(abs(self.obs_xyz[0] - self.obs_xyzdes[0])))
+            self.rw_t = 1  # time done -> reward_time = 1
+            self.rw_rpy = 0.0  # np.exp(-2*sum(abs(rotations.subtract_euler(self.obs_rpy_des, self.obs_rpy))[0]))
+
+            self.ADR_threshold = 20
+            self.ADR_cnt = 0
+            self.ADR_object = 1
 
     def BringClassifier(self, path):
         classifier = torch.load(path)

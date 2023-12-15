@@ -1,17 +1,11 @@
 import numpy as np
-import torch
-import gym
-import argparse
 import os
 import copy
-from pathlib import Path
-from stable_baselines3.common.policies import BasePolicy, register_policy
 
 from tqc import structures, DEVICE
 from tqc.trainer import Trainer
-from tqc.structures import Actor, Critic, RescaleAction
-from tqc.functions import eval_policy
-from fr3_envs.fr3Env import fr3
+from tqc.structures import Actor, Critic
+from fr3_envs.fr3_tqc import Fr3_tqc
 
 import torch.nn as nn
 import torch.nn.functional as F
@@ -30,11 +24,11 @@ class Classifier(nn.Module):
         x = F.relu(self.fc_(x))
         x = F.relu(self.fc4(x))
         return x
+    
+HOME = os.getcwd()
 
 def main():
-    # --- Init ---
-
-    env = fr3()
+    env = Fr3_tqc()
     env.env_rand = False
     env.rendering = True
     TRAIN = False
@@ -43,8 +37,8 @@ def main():
     batch_size = 256
     policy_kwargs = dict(n_critics=5, n_quantiles=25)
     save_freq = 1e5
-    models_dir = "./log/rpy/handle_only5/"
-    models_subdir=models_dir+"7.0/"
+    models_dir = os.path.join(HOME, "log", "rpy", "handle_only5")
+    models_subdir = os.path.join(models_dir, "7.0")
     episode_data = []
     save_flag = False
 
@@ -99,10 +93,10 @@ def main():
                 episode_timesteps = 0
                 episode_num += 1
             if save_flag:
-                path = models_dir + str((t + 1) // save_freq) + "/"
+                path = os.path.join(models_dir, str((t + 1) // save_freq))
                 os.makedirs(path, exist_ok=True)
-                if not os.path.exists(path):
-                    os.makedirs(path)
+                # if not os.path.exists(path):
+                #     os.makedirs(path)
                 trainer.save(path)
                 np.save(path + "reward", episode_data)
                 save_flag = False

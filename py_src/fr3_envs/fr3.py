@@ -3,16 +3,12 @@ import json
 from abc import *
 from time import sleep
 
-import torch
 import numpy as np
 from numpy.linalg import inv
 from scipy.spatial.transform import Rotation as R
 
-from utils import tools
 import mujoco
 from mujoco import viewer
-import gym
-from gym import spaces
 
 # Import requried libraries
 from utils import find_libraries
@@ -55,7 +51,7 @@ class Fr3:
 
     # Read json file of contact information
     def read_contact_json(self, json_name):
-        json_path = os.path.join(HOME, "fr3_envs", "jsons", json_name)
+        json_path = os.path.join(HOME, "fr3_envs", "jsons", "contacts", json_name)
         with open(json_path, 'r') as json_file:
             json_data = json.load(json_file)
 
@@ -107,7 +103,6 @@ class Fr3:
             self.viewer = viewer.launch_passive(model=self.model, data=self.data)
         else:
             self.viewer.sync()
-            sleep(0.002)
 
     @abstractmethod
     def env_randomization(self):
@@ -116,8 +111,7 @@ class Fr3:
     # Read json file of candidate information
     # Return quat_candidate, pos_candidate, nobj
     def read_candidate_json(self, obj, json_name):
-        json_path = os.path.join(HOME, "fr3_envs", "jsons", json_name)
-        print(json_path)
+        json_path = os.path.join(HOME, "fr3_envs", "jsons", "candidates", json_name)
         with open(json_path, 'r') as json_file:
             json_data = json.load(json_file)
 
