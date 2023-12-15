@@ -43,6 +43,7 @@ class Fr3_tqc(Fr3_rpy):
         self.handle_angle_reset = 0.0
         self.action_reset = 0
         self.cnt_reset = 0
+        
         while env_reset:
             self.episode_number += 1
             self.start_time = self.data.time + 1
@@ -54,22 +55,20 @@ class Fr3_tqc(Fr3_rpy):
                 self.direction = self.direction_state[randint(0, 1)]
 
             r, obj, radius, init_angle = self.env_randomization() #self.obs_object initialize
-
             self.init_angle = init_angle
 
             if self.direction == "clk":
-                self.goal_angle = init_angle - 5* np.pi
+                self.goal_angle = init_angle - 5*np.pi
             elif self.direction == "cclk":
-                self.goal_angle = init_angle + 5 * np.pi
-            self.required_angle = abs(self.goal_angle - self.init_angle)
+                self.goal_angle = init_angle + 5*np.pi
 
-            self.episode_time = abs( MOTION_TIME_CONST * abs(self.goal_angle-self.init_angle) * radius)
+            self.required_angle = abs(self.goal_angle - self.init_angle)
+            self.episode_time = abs( MOTION_TIME_CONST * self.required_angle * radius)
+
             self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
                                  self.model.opt.timestep, self.data.xpos[:22].reshape(66, ))
             self.controller.randomize_env(r, obj, self.data.xpos[:22].reshape(66, ), self.init_angle, self.goal_angle, RL, RPY)
-
             self.controller.control_mujoco()
-
 
             self.contact_done = False
             self.bound_done = False
@@ -79,7 +78,7 @@ class Fr3_tqc(Fr3_rpy):
             self.drpy_pre  = np.zeros(3)
 
             self.obs_q = np.zeros([self.stack, self.k])
-            self.obs_rpy = np.zeros([self.stack,6])
+            self.obs_rpy = np.zeros([self.stack, 6])
             self.obs_xyz = np.zeros([self.stack, 3])
 
             self.rpyfromvalve_data = []
@@ -100,26 +99,25 @@ class Fr3_tqc(Fr3_rpy):
                 self.path_data.append([ee[1] + self.data.qpos[:7].tolist()])
                 done = self._done()
                 normalized_q = self.obs_q[0]
-                if max(abs(normalized_q)) > 0.95:
-                    done = True
-
-                if done:
-                    # np.save("path_data.npy", self.path_data)
+                if done or max(abs(normalized_q)) > 0.95:
                     break
+
                 # --- collect observation for initialization ---
                 if cnt_frame == 100:
                     cnt_frame = 0
                     end_effector = self.controller.get_ee()
                     # self.save_frame_data(end_effector)
                     obs = self._observation(end_effector)
+
                 cnt_frame += 1
+
                 if self.rendering:
                     self.render()
-            if self.control_mode == 4:
 
-                env_reset = False
-                self.start_time = self.data.time
-                self.q_reset[:self.k] = self.data.qpos[:self.k]
+            # control mode : 4
+            env_reset = False
+            self.start_time = self.data.time
+            self.q_reset[:self.k] = self.data.qpos[:self.k]
 
         return obs
 
