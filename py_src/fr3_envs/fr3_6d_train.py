@@ -8,7 +8,7 @@ from scipy.spatial.transform import Rotation as R
 import mujoco
 from utils import rotations, tools
 
-import fr3_envs.fr3_rpy as fr3_rpy
+from fr3_envs.bases.fr3_rpy import Fr3_rpy
 
 # Constants
 BODY = 1
@@ -20,7 +20,7 @@ TASK_SPACE_TIME = 3+1+0.5
 RL = 2
 MANUAL = 1
 
-class Fr3_6d_train(fr3_rpy.Fr3_rpy):
+class Fr3_6d_train(Fr3_rpy):
     def __init__(self):
         super().__init__("frd_6d_train")
 

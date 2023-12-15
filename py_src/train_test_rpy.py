@@ -2,31 +2,14 @@ import os
 import argparse
 from utils.tqc_savemodel import TQCsm
 
-import fr3_envs.fr3_6d_train as fr3_6d_train
-import fr3_envs.fr3_6d_test as fr3_6d_test
-import fr3_envs.fr3_3d_test as fr3_3d_test
+from fr3_envs.fr3_6d_train import Fr3_6d_train
+from fr3_envs.fr3_6d_test import Fr3_6d_test
+from fr3_envs.fr3_3d_test import Fr3_3d_test
 
-import torch.nn as nn
-import torch.nn.functional as F
 import numpy as np
+from models.classifier_rpy import Classifier
 
 HOME = os.getcwd()
-
-# Parallel environments
-class Classifier(nn.Module):
-    def __init__(self, input_size, output_size):
-        super(Classifier, self).__init__()
-        self.fc1 = nn.Linear(input_size, 256)
-        self.fc2 = nn.Linear(256, 120)
-        self.fc3 = nn.Linear(120, 84)
-        self.fc4 = nn.Linear(84, output_size)
-
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = self.fc4(x)
-        return x
     
 def main(args):
     # Parallel environments
@@ -45,11 +28,11 @@ def main(args):
 
     # Import the environment
     if args.env == "6d_train":
-        env = fr3_6d_train.Fr3_6d_train()
+        env = Fr3_6d_train()
     elif args.env == "6d_test":
-        env = fr3_6d_test.Fr3_6d_test()
+        env = Fr3_6d_test()
     elif args.env == "3d_test":
-        env = fr3_3d_test.Fr3_3d_test()
+        env = Fr3_3d_test()
 
     env.env_rand = israndomenv
     env.rendering = isrendering
@@ -59,8 +42,8 @@ def main(args):
                   top_quantiles_to_drop_per_net=2,
                   verbose=1,
                   policy_kwargs=policy_kwargs,
-                  save_path='/home/kist-robot2/catkin_ws/src/franka_emika_panda/py_src/saved_model/step_{}',
-                  save_interval=1e5,
+                #   save_path='/home/kist-robot2/catkin_ws/src/franka_emika_panda/py_src/saved_model/step_{}',
+                #   save_interval=1e5,
                   tensorboard_log=os.path.join("log", "6d") if args.env[:2] == "6d" else os.path.join("log", "3d"),
                   learning_starts=100,
                   gamma=1,

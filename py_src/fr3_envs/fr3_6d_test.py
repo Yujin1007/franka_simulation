@@ -9,7 +9,7 @@ from scipy.spatial.transform import Rotation as R
 import mujoco
 from utils import rotations, tools
 
-import fr3_envs.fr3_rpy as fr3_rpy
+from fr3_envs.bases.fr3_rpy import Fr3_rpy
 
 # Constants
 BODY = 1
@@ -23,7 +23,7 @@ MANUAL = 1
 
 HOME = os.getcwd()
 
-class Fr3_6d_test(fr3_rpy.Fr3_rpy):
+class Fr3_6d_test(Fr3_rpy):
     def __init__(self):
         super().__init__("frd_6d_test")
 

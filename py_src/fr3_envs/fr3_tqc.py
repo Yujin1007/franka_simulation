@@ -300,7 +300,6 @@ class Fr3_tqc(Fr3_rpy):
 
 
         else:
-
             i = self.episode_number if self.episode_number <= 6 else self.episode_number - 7
             # print(i)
             # i = 4

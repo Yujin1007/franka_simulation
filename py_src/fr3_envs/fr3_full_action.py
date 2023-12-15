@@ -11,7 +11,7 @@ import mujoco
 import gym
 from gym import spaces
 
-import fr3_envs.fr3 as fr3
+from fr3_envs.bases.fr3 import Fr3
 
 # Constants
 BODY = 1
@@ -27,7 +27,7 @@ XYZRPY = True
 
 HOME = os.getcwd()
 
-class Fr3_full_action(fr3.Fr3):
+class Fr3_full_action(Fr3):
     def __init__(self):        
         super().__init__()
 
