@@ -43,7 +43,7 @@ class Fr3_tqc(Fr3_rpy):
         self.handle_angle_reset = 0.0
         self.action_reset = 0
         self.cnt_reset = 0
-        
+
         while env_reset:
             self.episode_number += 1
             self.start_time = self.data.time + 1
@@ -110,9 +110,7 @@ class Fr3_tqc(Fr3_rpy):
                     obs = self._observation(end_effector)
 
                 cnt_frame += 1
-
-                if self.rendering:
-                    self.render()
+                self.render_mujoco()
 
             # control mode : 4
             env_reset = False
@@ -123,16 +121,14 @@ class Fr3_tqc(Fr3_rpy):
 
     def step(self, action_rotation):
         drpy = tools.orientation_6d_to_euler(action_rotation)
-        done = False
-        duration = 0
         normalized_q = self.obs_q[0]
+
         if max(abs(normalized_q)) > 0.95:
             self.action_reset = 1
             self.cnt_reset += 1
             # print(self.cnt_reset, end="|")
             # if self.cnt_reset >= 10:
             #     self.rendering = True
-
         else:
             self.action_reset = 0
 
@@ -140,37 +136,14 @@ class Fr3_tqc(Fr3_rpy):
             self.handle_angle_reset += max(abs(self.data.qpos[-2:]))
             self.data.qpos= self.q_reset
             self.data.qvel = self.qdot_init
+
             mujoco.mj_step(self.model, self.data)
             self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
                                  self.model.opt.timestep, self.data.xpos[:22].reshape(66, ))
             self.controller.target_replan()
-            if self.rendering:
-                    self.render()
+            self.render_mujoco()
         else:
-            while not done:
-                done = self._done()
-                self.control_mode = self.controller.control_mode()
-                self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
-                                     self.model.opt.timestep, self.data.xpos[:22].reshape(66, ))
-
-                # --- RL controller input ---
-                if self.control_mode == RL_CIRCULAR_CONTROL:
-                    drpy_tmp = (drpy - self.drpy_pre) / 100 * duration + self.drpy_pre
-                    duration += 1
-                    self.controller.put_action(drpy_tmp)
-                if duration == 100:
-                    self.drpy_pre = drpy
-                    break
-
-                self.controller.control_mujoco()
-                self._torque, self.max_rotation = self.controller.write()
-                for i in range(self.dof-1):
-                    self.data.ctrl[i] = self._torque[i]
-                mujoco.mj_step(self.model, self.data)
-
-
-                if self.rendering:
-                    self.render()
+            done = self.control_mujoco(drpy)
 
         ee = self.controller.get_ee()
         obs = self._observation(ee)
@@ -182,6 +155,41 @@ class Fr3_tqc(Fr3_rpy):
         self.action_pre = action_rotation
 
         return obs, reward, done, info
+    
+    def render_mujoco(self):
+        if self.rendering:
+            self.render()
+
+    def control_mujoco(self, drpy):
+        done = False
+        duration = 0
+
+        while not done:
+            done = self._done()
+            self.control_mode = self.controller.control_mode()
+            self.controller.read(self.data.time, self.data.qpos[0:self.dof], self.data.qvel[0:self.dof],
+                                 self.model.opt.timestep, self.data.xpos[:22].reshape(66, ))
+
+            # --- RL controller input ---
+            if self.control_mode == RL_CIRCULAR_CONTROL:
+                drpy_tmp = (drpy - self.drpy_pre) / 100 * duration + self.drpy_pre
+                duration += 1
+                self.controller.put_action(drpy_tmp)
+
+            if duration == 100:
+                self.drpy_pre = drpy
+                break
+
+            self.controller.control_mujoco()
+            self._torque, self.max_rotation = self.controller.write()
+
+            for i in range(self.dof-1):
+                self.data.ctrl[i] = self._torque[i]
+
+            mujoco.mj_step(self.model, self.data)
+            self.render_mujoco()
+        
+        return done
 
     def _observation(self, end_effector):
         # stack observations
