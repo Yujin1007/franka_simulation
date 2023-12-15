@@ -47,6 +47,7 @@ class TQC:
                 self.trainer.train(self.replay_buffer, BATCH_SIZE)
             if (t + 1) % SAVE_FREQ == 0:
                 save_flag = True
+
             if done:
                 # +1 to account for 0 indexing. +0 on ep_timesteps since it will increment +1 even if done=True
                 print(f"Total T: {t + 1} Episode Num: {episode_num + 1} Episode T: {episode_timesteps} Reward: {episode_return:.3f}")
@@ -56,6 +57,7 @@ class TQC:
                 episode_return = 0
                 episode_timesteps = 0
                 episode_num += 1
+                
             if save_flag:
                 path = os.path.join(MODELS_DIR, str((t + 1) // SAVE_FREQ))
                 os.makedirs(path, exist_ok=True)
@@ -77,11 +79,12 @@ class TQC:
         for _ in range(NUM_EP):
             state = self.env.reset()
             done = False
+            
             while not done:
                 action = self.actor.select_action(state)
-
                 next_state, reward, done, _ = self.env.step(action)
                 state = next_state
                 episode_return += reward
+
             print(f"episode: {self.env.episode_number}, goal_angle: {self.env.required_angle}, handle_angle: {self.env.handle_angle}")
             print(f"time: {self.env.time_done}, contact: {self.env.contact_done}, bound: {self.env.bound_done}, goal: {self.env.goal_done}, reset: {self.env.reset_done}")

@@ -15,9 +15,6 @@ HOME = os.getcwd()
 
 def main(args):
     env = Fr3_tqc()
-    env.env_rand = False
-    env.rendering = True
-
     policy_kwargs = dict(n_critics=5, n_quantiles=25)
 
     state_dim = env.observation_space.shape
@@ -40,9 +37,14 @@ def main(args):
 
     # Train mode
     if args.exec == "train":
+        env.env_rand = True
+        env.rendering = False
         model.train()
+
     # Evaluation mode
     elif args.exec == "eval":
+        env.env_rand = False
+        env.rendering = True
         model.eval()
 
 if __name__ == "__main__":

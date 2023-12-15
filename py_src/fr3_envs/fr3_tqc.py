@@ -113,9 +113,10 @@ class Fr3_tqc(Fr3_rpy):
                 self.render_mujoco()
 
             # control mode : 4
-            env_reset = False
-            self.start_time = self.data.time
-            self.q_reset[:self.k] = self.data.qpos[:self.k]
+            if self.control_mode == 4:
+                env_reset = False
+                self.start_time = self.data.time
+                self.q_reset[:self.k] = self.data.qpos[:self.k]
 
         return obs
 
@@ -212,7 +213,6 @@ class Fr3_tqc(Fr3_rpy):
 
         observation = dict(object=self.obs_object,q=self.obs_q,rpy=self.obs_rpy, x_pos=self.obs_xyz)
         # self.save_frame_data(end_effector)
-        # 이 부분 차이점
         observation = self._flatten_obs(observation)
 
         return observation
@@ -220,28 +220,25 @@ class Fr3_tqc(Fr3_rpy):
     def _reward(self, action, done):
         if (self.action_pre == 0.0).all():
             self.action_pre = action
-        reward_acc = -sum(abs(rotations.subtract_euler(tools.orientation_6d_to_euler(action),
-                                                                  tools.orientation_6d_to_euler(self.action_pre))))
 
+        reward_acc = -sum(abs(rotations.subtract_euler(tools.orientation_6d_to_euler(action), tools.orientation_6d_to_euler(self.action_pre))))
         reward_grasp = 0
         reward_contact = 0
         reward_bound = 0
 
-        if self.control_mode == RL_CIRCULAR_CONTROL: # 잡은 이후
-            if not -1 in self.contact_list:
-                reward_grasp = -2+len(self.grasp_list) # grasp_list max = 8 : finger parts.
+        # Contact
+        if (self.control_mode == RL_CIRCULAR_CONTROL) and (not -1 in self.contact_list): # 잡은 이후
+            reward_grasp = -2+len(self.grasp_list) # grasp_list max = 8 : finger parts.
+
+        # Reset
         if self.action_reset:
             reward_bound = -1
-        if done:
-            if self.contact_done:
-                reward_contact = -1
 
+        # Done
+        if done and self.contact_done:
+            reward_contact = -1
 
-        reward = self.rw_acc*reward_acc\
-                 +self.rw_gr*reward_grasp\
-                 +self.rw_c*reward_contact\
-                 +self.rw_b*reward_bound
-
+        reward = self.rw_acc*reward_acc + self.rw_gr*reward_grasp + self.rw_c*reward_contact + self.rw_b*reward_bound
         return reward
 
 
@@ -260,21 +257,23 @@ class Fr3_tqc(Fr3_rpy):
             'q': spaces.Box(shape=(self.stack, self.k), low=-1, high=1, dtype=np.float32),
             'rpy': spaces.Box(shape=(self.stack, 6), low=-1, high=1, dtype=np.float_),
             'x_pos': spaces.Box(shape=(self.stack, 3), low=-np.inf, high=np.inf, dtype=np.float_),
-        }
+            }
+        
         observation = spaces.Dict(s)
         observation.shape = 0
         for _, v in s.items():
             observation.shape += v.shape[0] * v.shape[1]
+
         return observation
 
     def _flatten_obs(self, observation):
         flatten_obs = []
-        for k,v in observation.items():
-            flatten_obs = np.concatenate([flatten_obs, v.flatten()])
+        for k, v in observation.items():
+            flatten_obs.append(v.flatten())
+        flatten_obs = np.concatenate(flatten_obs)
         return flatten_obs
     
     def env_randomization(self):
-
         obj_list = ["handle", "valve"]
         radius_list = [0.119, 0.1]
         o = randint(0,1)
@@ -286,6 +285,7 @@ class Fr3_tqc(Fr3_rpy):
         bid = mujoco.mj_name2id(self.model, BODY, obj)
         nbid = mujoco.mj_name2id(self.model, BODY, nobj)
 
+        # Train
         if self.env_rand:
             i = randint(0, 6)
             axis = ['x', 'y', 'z']
@@ -303,12 +303,12 @@ class Fr3_tqc(Fr3_rpy):
             # print("quat:",random_quat, "pos: ",random_pos)
             self.model.body_pos[nbid] += 3
             r = R.from_quat(tools.quat2xyzw(random_quat))
-
-
+            
+        # Eval
         else:
             i = self.episode_number if self.episode_number <= 6 else self.episode_number - 7
             # print(i)
-            # i = 4
+            # i = 5
             self.direction = "cclk"
             random_quat = quat_candidate[i]
             random_pos = pos_candidate[i]
@@ -352,14 +352,13 @@ class Fr3_tqc(Fr3_rpy):
             self.T_vv = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
         # result = 17
         init_angle = 2*np.pi*result/36
-        self.obs_object = np.concatenate([self.model.body_pos[bid], obj_rotation6d, [direction], obj_id],
-                                         axis=0)
+        self.obs_object = np.concatenate([self.model.body_pos[bid], obj_rotation6d, [direction], obj_id], axis=0)
         self.obs_object = self.obs_object.reshape((1, 13))
-
 
         self.obj_pos = random_pos
         self.obj_rotation = r.as_matrix()
         self.normal_vector = self.obj_rotation @ self.o_margin
+
         self.obj_normal = [0, 0, 0]
         for idx in range(3):
             self.obj_normal[idx] = self.normal_vector[idx][0] + self.obj_pos[idx]
