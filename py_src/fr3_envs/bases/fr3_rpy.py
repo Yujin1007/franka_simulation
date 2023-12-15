@@ -46,8 +46,8 @@ class Fr3_rpy(Fr3):
         self.episode_number = -1
 
         os.chdir(HOME)
-        self.classifier_clk = self.BringClassifier(os.path.join("classifier", "model_clk.pt"))
-        self.classifier_cclk = self.BringClassifier(os.path.join("classifier", "model_cclk.pt"))
+        self.classifier_clk = self.BringClassifier(os.path.join("models", "classifier", "model_clk.pt"))
+        self.classifier_cclk = self.BringClassifier(os.path.join("models", "classifier", "model_cclk.pt"))
 
         desired_contact_list, desired_contact_list_finger, desired_contact_list_obj,\
         robot_contact_list, object_contact_list = self.read_contact_json("contact_tqc.json" if env == "fr3_tqc" else "contact_rpy.json")

@@ -2,14 +2,14 @@ import os
 import copy
 import argparse
 
-from tqc import structures, DEVICE
-from tqc.trainer import Trainer
-from tqc.structures import Actor, Critic
-from tqc.train_and_test import train, eval
+from models.tqc import structures, DEVICE
+from models.tqc.trainer import Trainer
+from models.tqc.structures import Actor, Critic
+from models.tqc.train_and_test import train, eval
 from fr3_envs.fr3_tqc import Fr3_tqc
 
 import numpy as np
-from models.classifier_tqc import Classifier
+from models.classifier.classifier_tqc import Classifier
     
 HOME = os.getcwd()
 

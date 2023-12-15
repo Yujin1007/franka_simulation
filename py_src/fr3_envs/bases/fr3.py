@@ -15,7 +15,7 @@ from utils import find_libraries
 rbdl_path, urdfreader_path = find_libraries.find_libraries()
 
 try:
-    from cpp_library import controller
+    from assets.cpp_library import controller
 except ImportError as ie:
     print("Register rbdl and rbdl_urdfreader to PATH")
     print("Command : ")
@@ -64,7 +64,7 @@ class Fr3:
         return desired_contact_list, desired_contact_list_finger, desired_contact_list_obj, robot_contact_list, object_contact_list
 
     def import_model(self):
-        model_path = os.path.join("franka_emika_panda", "scene_valve.xml")
+        model_path = os.path.join("assets", "franka_emika_panda", "scene_valve.xml")
         return mujoco.MjModel.from_xml_path(model_path)
 
     @abstractmethod

@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation as R
 from utils import tools, rotations
 import torch
 
-from fr3_envs.fr3_rpy import Fr3_rpy
+from fr3_envs.bases.fr3_rpy import Fr3_rpy
 
 # Constants
 BODY = 1

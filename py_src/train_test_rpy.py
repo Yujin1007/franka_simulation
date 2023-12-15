@@ -7,7 +7,7 @@ from fr3_envs.fr3_6d_test import Fr3_6d_test
 from fr3_envs.fr3_3d_test import Fr3_3d_test
 
 import numpy as np
-from models.classifier_rpy import Classifier
+from models.classifier.classifier_rpy import Classifier
 
 HOME = os.getcwd()
     

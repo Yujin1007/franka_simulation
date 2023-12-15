@@ -53,7 +53,7 @@ void CModel::Initialize()
 
 void CModel::load_model()
 {   
-	RigidBodyDynamics::Addons::URDFReadFromFile("franka_emika_panda/fr3.urdf", &_model, false, true); //new model from ./comile 근데 확장자만 바뀌고 urdf로 변환은 안된것같은데.. 
+	RigidBodyDynamics::Addons::URDFReadFromFile("assets/franka_emika_panda/fr3.urdf", &_model, false, true); //new model from ./comile 근데 확장자만 바뀌고 urdf로 변환은 안된것같은데.. 
     cout << endl << endl << "Model Loaded for RBDL." << endl << "Total DoFs: " << _model.dof_count << endl << endl;
 	if (_model.dof_count != _k)
 	{
