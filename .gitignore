@@ -32,9 +32,10 @@
 *.app
 *.cache
 
-# Cache
+# Caches
 py_src/__pycache__
 py_src/fr3_envs/__pycache__
+py_src/fr3_envs/bases/__pycache__
 py_src/utils/__pycache__
 
 py_src/models/__pycache__

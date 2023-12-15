@@ -5,7 +5,7 @@ import argparse
 from models.tqc import structures, DEVICE
 from models.tqc.trainer import Trainer
 from models.tqc.structures import Actor, Critic
-from models.tqc.train_and_test import train, eval
+from models.tqc.train_and_test import TQC
 from fr3_envs.fr3_tqc import Fr3_tqc
 
 import numpy as np
@@ -35,13 +35,15 @@ def main(args):
                       discount=0.99,
                       tau=0.005,
                       target_entropy=-np.prod(env.action_space.shape).item())
+    
+    model = TQC(actor, env, trainer, critic, replay_buffer)
 
     # Train mode
     if args.exec == "train":
-        train(actor, env, trainer, replay_buffer)
+        model.train()
     # Evaluation mode
     elif args.exec == "eval":
-        eval(actor, env, critic, trainer)
+        model.eval()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
