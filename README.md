@@ -1,7 +1,8 @@
 # franka_simulation
 
 * install
-  * conda install --file packagelist.txt 
+  * conda install --file packagelist.txt
+  * conda env create --file environment.yaml
 
 * C++ 파일 빌드 방법
   * `chmod +x build_cpp.sh`
