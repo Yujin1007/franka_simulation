@@ -1,4 +1,3 @@
-# Find requried libraries and register them to PATH
 import os
 
 def find_file_directory(file_name, start_path="/home/"):
@@ -7,6 +6,7 @@ def find_file_directory(file_name, start_path="/home/"):
             return os.path.abspath(root)
     return None
 
+# Find requried libraries and register them to PATH
 def find_libraries():
     rbdl_name = "librbdl.so.3.2.0"
     urdfreader_name = "librbdl_urdfreader.so.3.2.0"

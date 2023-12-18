@@ -1,7 +1,7 @@
 # franka_simulation
 
 * install
-  * `conda env create f environment.yaml`
+  * `conda env create -f environment.yaml`
 
 * C++ 파일 빌드 방법
   1. conda 가상환경 활성화

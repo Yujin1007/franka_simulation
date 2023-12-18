@@ -29,8 +29,9 @@ RL_CIRCULAR_CONTROL = 4
 RL_CONTROL = 6
 
 class Fr3_tqc(Fr3_rpy):
-    def __init__(self):
-        super().__init__("fr3_tqc")
+    def __init__(self, rw_acc, rw_c, rw_b, rw_gr, history, object):
+        super().__init__("fr3_tqc", rw_acc, rw_c, rw_b, rw_gr, history)
+        self.object = object
 
     def reset(self, direction=None):
         self.control_mode = 0
@@ -274,12 +275,10 @@ class Fr3_tqc(Fr3_rpy):
         return flatten_obs
     
     def env_randomization(self):
-        obj_list = ["handle", "valve"]
+        # default : handle
+        obj = self.object
         radius_list = [0.119, 0.1]
-        o = randint(0,1)
-        o = 0 #valve 대상으로 한 코드는 아직 (x)
-        obj = obj_list[o]
-        radius = radius_list[o]
+        radius = radius_list[0] if obj == "handle" else radius_list[1]
 
         quat_candidate, pos_candidate, nobj = self.read_candidate_json(obj, "candidate_tqc.json")
         bid = mujoco.mj_name2id(self.model, BODY, obj)

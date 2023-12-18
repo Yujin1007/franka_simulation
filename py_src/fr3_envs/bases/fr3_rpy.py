@@ -23,8 +23,8 @@ RL = 2
 MANUAL = 1
 
 class Fr3_rpy(Fr3):
-    def __init__(self, env):
-        super().__init__()
+    def __init__(self, env, rw_acc, rw_c, rw_b, rw_gr, history):
+        super().__init__(history)
         self.env = env
 
         self.observation_space = self._construct_observation_space()
@@ -32,10 +32,10 @@ class Fr3_rpy(Fr3):
 
         ## reward weight
         self.reward_range = None
-        self.rw_acc = 3 if env == "fr3_tqc" else 1  # np.exp(-sum(abs(action - self.action_pre)))
-        self.rw_c = 10  # contact done -> -1
-        self.rw_b = 1  # joint boundary done -> -1
-        self.rw_gr = 1.0 if env == "fr3_tqc" else 2.0  # 1/-1 grasp
+        self.rw_acc = rw_acc # reward
+        self.rw_c = rw_c  # penalty
+        self.rw_b = rw_b   # penalty
+        self.rw_gr = rw_gr # reward
 
         self.viewer = None
         self.env_rand = False
