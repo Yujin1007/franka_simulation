@@ -15,7 +15,7 @@ NUM_EP = 6
 
 HOME = os.getcwd()
 MODELS_DIR = os.path.join(HOME, "log", "rpy", "handle_only5")
-MODELS_SUBDIR = os.path.join(MODELS_DIR, "7.0")
+MODELS_SUBDIR = os.path.join(MODELS_DIR, "10.0")
 
 class TQC:
     def __init__(self, env, policy_kwargs):
