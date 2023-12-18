@@ -2,14 +2,15 @@ import os
 
 def find_file_directory(file_name, start_path="/home/"):
     for root, _, files in os.walk(start_path):
-        if file_name in files:
-            return os.path.abspath(root)
+        for file in files:
+            if file.startswith(file_name):
+                return os.path.abspath(root)
     return None
 
 # Find requried libraries and register them to PATH
 def find_libraries():
-    rbdl_name = "librbdl.so.3.2.0"
-    urdfreader_name = "librbdl_urdfreader.so.3.2.0"
+    rbdl_name = "librbdl.so"
+    urdfreader_name = "librbdl_urdfreader.so"
 
     rbdl_path = find_file_directory(rbdl_name)
     urdfreader_path = find_file_directory(urdfreader_name)

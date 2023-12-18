@@ -296,28 +296,25 @@ class Fr3_tqc(Fr3_rpy):
 
             add_pos = [(random() - 0.5) / 5, (random() - 0.5) / 5, (random() - 0.5) / 5]
             random_pos = [x + y for x, y in zip(add_pos, pos_candidate[i])]
-            # random_pos = [(random() * 0.4 + 0.3), (random()*0.8 - 0.4), random() * 0.7 + 0.1]
+            
             self.model.body_quat[bid] = random_quat
             self.model.body_pos[bid] = random_pos
-            # print("quat:",random_quat, "pos: ",random_pos)
+     
             self.model.body_pos[nbid] += 3
             r = R.from_quat(tools.quat2xyzw(random_quat))
             
         # Eval
         else:
             i = self.episode_number if self.episode_number <= 6 else self.episode_number - 7
-            # print(i)
-            # i = 5
             self.direction = "cclk"
+
             random_quat = quat_candidate[i]
             random_pos = pos_candidate[i]
+
             self.model.body_quat[bid] = random_quat
             self.model.body_pos[bid] = random_pos
             self.model.body_pos[nbid] += 3
             r = R.from_quat(tools.quat2xyzw(random_quat))
-            # random_quat = self.model.body_quat[bid].copy().tolist()
-            # random_pos =  self.model.body_pos[bid].copy().tolist()
-            # r = R.from_quat(tools.quat2xyzw(random_quat))
 
         mujoco.mj_step(self.model, self.data)
         self.obj = obj
@@ -341,15 +338,13 @@ class Fr3_tqc(Fr3_rpy):
 
             self.o_margin = [[0], [0.149], [0]]
             self.T_vv = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]])
-            # print("direction :", self.direction, "input:",input_data)
-            # print("result :", torch.argmax(predictions), "angles :", result, "output:",predictions)
 
         elif obj == "valve":
             obj_id = [0, 1, 0]
             result = 0
             self.o_margin = [[0], [0], [-0.017]]
             self.T_vv = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
-        # result = 17
+
         init_angle = 2*np.pi*result/36
         self.obs_object = np.concatenate([self.model.body_pos[bid], obj_rotation6d, [direction], obj_id], axis=0)
         self.obs_object = self.obs_object.reshape((1, 13))
