@@ -27,8 +27,15 @@ if [ -e "$destination_folder/$file_to_copy" ]; then
     echo "Existing file removed."
 fi
 
-echo -e "\nCopying $file_to_copy to $destination_folder..."
-cp "$build_folder/$file_to_copy" "$destination_folder"
-echo "$file_to_copy copied successfully."
+new_filename="controller.so"
+first_10_chars=$(echo "$file_to_copy" | cut -c 1-10)
+if [ "$first_10_chars" == "controller" ]; then
+    mv "$build_folder/$file_to_copy" "$build_folder/$new_filename"
+    echo "$file_to_copy renamed successfully to $new_filename"
+fi
+
+echo -e "\nCopying $new_filename to $destination_folder..."
+cp "$build_folder/$new_filename" "$destination_folder"
+echo "$new_filename copied successfully."
 
 echo -e "\nBuild process completed."
