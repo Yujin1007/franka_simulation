@@ -10,6 +10,8 @@ import gym
 from gym import spaces
 
 from fr3_envs.bases.fr3 import Fr3
+from models.classifier.classifier_tqc import Classifier
+from models.tqc import DEVICE
 HOME = os.getcwd()
 
 # Constants
@@ -76,7 +78,8 @@ class Fr3_rpy(Fr3):
             self.ADR_object = 1
 
     def BringClassifier(self, path):
-        classifier = torch.load(path)
+        classifier = Classifier(input_size=7, output_size=20).to(DEVICE)
+        classifier.load_state_dict(torch.load(path, map_location=DEVICE))
         classifier.eval()
         return classifier
 

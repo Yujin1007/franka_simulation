@@ -3,7 +3,6 @@ import argparse
 
 from models.tqc.tqc import TQC
 from fr3_envs.fr3_tqc import Fr3_tqc
-from models.classifier.classifier_tqc import Classifier
     
 HOME = os.getcwd()
 
@@ -33,10 +32,10 @@ def train_franka_valve(
     Train franka_valve
 
     - hyperparameters for an environment
-    :param acc: Reward for difference of rpy (Negative), default: 3
-    :param c: Reward for collision (Negative), default: 10
-    :param b: Reward for joint boundary limit (Negative), default: 1
-    :param gr: Reward for grasping an object (Positive), default: 1
+    :param acc: Reward for difference of rpy (Reward), default: 3
+    :param c: Reward for collision (Penalty), default: 10
+    :param b: Reward for joint boundary limit (Penalty), default: 1
+    :param gr: Reward for grasping an object (Reward), default: 1
     :param history: The length of a history to observe, default: 5
     :param object: Object to rotate, default: handle, choices: [handle, valve]
 
@@ -67,10 +66,10 @@ def eval_franka_valve(
     Evaluate franka_valve
 
     - hyperparameters for an environment
-    :param acc: Reward for difference of rpy (Negative), default: 3
-    :param c: Reward for collision (Negative), default: 10
-    :param b: Reward for joint boundary limit (Negative), default: 1
-    :param gr: Reward for grasping an object (Positive), default: 1
+    :param acc: Reward for difference of rpy (Reward), default: 3
+    :param c: Reward for collision (Penalty), default: 10
+    :param b: Reward for joint boundary limit (Penalty), default: 1
+    :param gr: Reward for grasping an object (Reward), default: 1
     :param history: The length of a history to observe, default: 5
     :param object: Object to rotate, default: handle, choices: [handle, valve]
 

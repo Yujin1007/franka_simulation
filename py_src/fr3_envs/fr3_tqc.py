@@ -128,9 +128,6 @@ class Fr3_tqc(Fr3_rpy):
         if max(abs(normalized_q)) > 0.95:
             self.action_reset = 1
             self.cnt_reset += 1
-            # print(self.cnt_reset, end="|")
-            # if self.cnt_reset >= 10:
-            #     self.rendering = True
         else:
             self.action_reset = 0
 
@@ -213,7 +210,6 @@ class Fr3_tqc(Fr3_rpy):
         self.obs_q[0] = q
 
         observation = dict(object=self.obs_object,q=self.obs_q,rpy=self.obs_rpy, x_pos=self.obs_xyz)
-        # self.save_frame_data(end_effector)
         observation = self._flatten_obs(observation)
 
         return observation
