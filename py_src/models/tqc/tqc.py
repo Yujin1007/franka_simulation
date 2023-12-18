@@ -1,5 +1,10 @@
 import os
+import copy
 import numpy as np
+
+from models.tqc import DEVICE
+from models.tqc.trainer import Trainer
+from models.tqc.structures import ReplayBuffer, Actor, Critic
 
 # Constants
 MAX_TIMESTEPS = 1e6
@@ -13,15 +18,29 @@ MODELS_DIR = os.path.join(HOME, "log", "rpy", "handle_only5")
 MODELS_SUBDIR = os.path.join(MODELS_DIR, "7.0")
 
 class TQC:
-    def __init__(self, actor, env, trainer, critic, replay_buffer):
+    def __init__(self, env, policy_kwargs):
         super(TQC, self).__init__()
-        self.actor = actor
         self.env = env
-        self.trainer = trainer
-        self.critic = critic
-        self.replay_buffer = replay_buffer
+        state_dim = self.env.observation_space.shape
+        action_dim = self.env.action_space.shape[0]
+        self.replay_buffer = ReplayBuffer(state_dim, action_dim)
+
+        self.actor = Actor(state_dim, action_dim).to(DEVICE)
+        self.critic = Critic(state_dim, action_dim, policy_kwargs["n_quantiles"], policy_kwargs["n_critics"]).to(DEVICE)
+        self.critic_target = copy.deepcopy(self.critic)
+
+        self.trainer = Trainer(actor=self.actor,
+                               critic=self.critic,
+                               critic_target=self.critic_target,
+                               top_quantiles_to_drop=2,
+                               discount=0.99,
+                               tau=0.005,
+                               target_entropy=-np.prod(env.action_space.shape).item())
 
     def train(self):
+        self.env.env_rand = True
+        self.env.rendering = False
+
         episode_data = []
         save_flag = False
 
@@ -61,13 +80,14 @@ class TQC:
             if save_flag:
                 path = os.path.join(MODELS_DIR, str((t + 1) // SAVE_FREQ))
                 os.makedirs(path, exist_ok=True)
-                if not os.path.exists(path):
-                    os.makedirs(path)
                 self.trainer.save(path)
                 np.save(os.path.join(path, "reward"), episode_data)
                 save_flag = False
 
     def eval(self):
+        self.env.env_rand = False
+        self.env.rendering = True
+
         self.trainer.load(MODELS_SUBDIR)
         # reset_agent.load(models_subdir)
         self.actor.eval()
