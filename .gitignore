@@ -31,3 +31,17 @@
 *.out
 *.app
 *.cache
+
+# Caches
+py_src/__pycache__
+py_src/fr3_envs/__pycache__
+py_src/fr3_envs/bases/__pycache__
+py_src/utils/__pycache__
+
+py_src/models/__pycache__
+py_src/models/tqc/__pycache__
+py_src/models/classifier/__pycache__
+
+MUJOCO_LOG.TXT
+.vscode
+.idea

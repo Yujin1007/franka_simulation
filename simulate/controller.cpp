@@ -1,5 +1,3 @@
-
-
 #include "controller.h"
 #include <chrono>
 #include <vector>
@@ -113,9 +111,9 @@ void CController::write(double *torque)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 void CController::read_pybind(double t, std::array<double, 9> q, std::array<double, 9> qdot, double timestep, std::array<double, 66> pos)
 {
-	int robot_base = 6;
-	int valve = 42;
-	int handle_valve = 54;
+	// int robot_base = 6;
+	// int valve = 42;
+	// int handle_valve = 54;
 	_dt = timestep;
 	_t = t;
 	if (_bool_init == true)
@@ -126,12 +124,12 @@ void CController::read_pybind(double t, std::array<double, 9> q, std::array<doub
 			_init_gripper = q[_k + i];
 		}
 
-		for (int i = 0; i < 3; i++)
-		{
-			_valve(i) = pos[valve + i];
-			_handle_valve(i) = pos[handle_valve + i];
-			_robot_base(i) = pos[robot_base + i];
-		}
+		// for (int i = 0; i < 3; i++)
+		// {
+		// 	_valve(i) = pos[valve + i];
+		// 	_handle_valve(i) = pos[handle_valve + i];
+		// 	_robot_base(i) = pos[robot_base + i];
+		// }
 		_bool_init = false;
 	}
 
@@ -196,30 +194,44 @@ void CController::put_action_pybind(std::array<double, 3> drpy)
 }
 void CController::put_action2_pybind(std::array<double, 3> drpy, std::array<double, 3> dxyz, double gripper)
 {
-	_generate_dxyz = true;
+	// _generate_dxyz = true;
 	for (int i = 0; i < 3; i++)
 	{
 		_drpy(i) = drpy[i];
 		_dxyz(i) = dxyz[i];
 	}
-	if (_gripper_goal != gripper){
-		_start_time = _t;
-		_init_gripper = _gripper; //current gripper
-		
-		_gripper_goal = gripper; // gripper command from python
+	if (_generate_dxyz){
+		if (_gripper_goal != gripper){
+			_start_time = _t;
+			_init_gripper = _gripper; //current gripper
+			
+			_gripper_goal = gripper; // gripper command from python
+		}
 	}
+	
 	// cout<<"_drpy : "<<_drpy.transpose()<< "  _dxyz:"<<_dxyz.transpose()<<endl;
 	
 } 
+void CController::put_action3_pybind(std::array<double, 5> qdot_rl)
+{	
+	for (int i = 0; i < 5; i++)
+	{
+		_qdot_rl(i) = qdot_rl[i];
+	}
+}
 
 
 // 1 episode 에 1번만 하면 돼서 따로 빼줌.
-void CController::randomize_env_pybind(std::array<std::array<double, 3>, 3> rotation_obj, std::string object_name, double init_theta, double goal_theta, int planning_mode)
+void CController::randomize_env_pybind(std::array<std::array<double, 3>, 3> rotation_obj, std::string object_name, std::array<double, 66> pos, double init_theta, double goal_theta, int planning_mode, bool generate_dxyz)
 {
 	_init_theta = init_theta;
 	_goal_theta = goal_theta;
 	_object_name = object_name;
 	_planning_mode = planning_mode;
+	_generate_dxyz = generate_dxyz;
+	int robot_base = 6;
+	int valve = 42;
+	int handle_valve = 54;
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 3; ++j)
@@ -227,6 +239,31 @@ void CController::randomize_env_pybind(std::array<std::array<double, 3>, 3> rota
 			_rotation_obj(i, j) = rotation_obj[i][j];
 		}
 	}
+	for (int i = 0; i < 3; i++)
+	{
+		_valve(i) = pos[valve + i];
+		_handle_valve(i) = pos[handle_valve + i];
+		_robot_base(i) = pos[robot_base + i];
+	}
+}
+tuple<std::vector<double>, std::vector<double>> CController::get_force_pybind()
+{
+	torque_command.clear();
+	force_command.clear();
+
+	for (int i = 0; i < _k; i++)
+	{
+		torque_command.push_back(_torque(i));
+	}
+	for (int i = 0; i < 1; i++)
+	{
+		torque_command.push_back(_grippertorque);
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		force_command.push_back(_compensated_force(i));
+	}
+	return make_tuple(force_command, torque_command);
 }
 
 double CController::control_mode_pybind()
@@ -234,41 +271,42 @@ double CController::control_mode_pybind()
 	return _control_mode;
 }
 
-tuple<vector<double>, vector<double>, vector<vector<double>>> CController::get_ee_pybind()
-{
-	x_hand.clear();
-	x_plan.clear();
-	J_hands.clear();
-	J_hands = {{{0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0}}};
-	for (int i = 0; i < 3; i++)
-	{
-		x_plan.push_back(_x_des_hand(i));
-	}
-	for (int i = 0; i < 6; i++)
-	{
-		x_hand.push_back(_x_hand(i));
-	}
-	for (int i = 0; i < _J_hands.rows(); ++i)
-	{
-		for (int j = 0; j < _J_hands.cols(); ++j)
-		{
-			J_hands[i][j] = _J_hands(i, j);
-		}
-	}
-	J_hands[0][0] = _gripper_goal;
+// tuple<vector<double>, vector<double>, vector<vector<double>>> CController::get_ee_pybind()
+// {
+// 	x_hand.clear();
+// 	x_plan.clear();
+// 	J_hands.clear();
+// 	J_hands = {{{0, 0, 0, 0, 0, 0, 0},
+// 				{0, 0, 0, 0, 0, 0, 0},
+// 				{0, 0, 0, 0, 0, 0, 0},
+// 				{0, 0, 0, 0, 0, 0, 0},
+// 				{0, 0, 0, 0, 0, 0, 0},
+// 				{0, 0, 0, 0, 0, 0, 0}}};
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		x_plan.push_back(_x_des_hand(i));
+// 	}
+// 	for (int i = 0; i < 6; i++)
+// 	{
+// 		x_hand.push_back(_x_hand(i));
+// 	}
+// 	for (int i = 0; i < _J_hands.rows(); ++i)
+// 	{
+// 		for (int j = 0; j < _J_hands.cols(); ++j)
+// 		{
+// 			J_hands[i][j] = _J_hands(i, j);
+// 		}
+// 	}
+// 	J_hands[0][0] = _gripper_goal;
 
-	return make_tuple(x_plan, x_hand, J_hands);
-}
+// 	return make_tuple(x_plan, x_hand, J_hands);
+// }
 
-tuple<vector<double>, vector<double>> CController::get_ee_simple_pybind()
+tuple<vector<double>, vector<double>, float> CController::get_ee_pybind()
 {
 	x_hand.clear();
 	xdot_hand.clear();
+	
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -278,8 +316,8 @@ tuple<vector<double>, vector<double>> CController::get_ee_simple_pybind()
 	{
 		x_hand.push_back(_x_hand(i));
 	}
-
-	return make_tuple(xdot_hand, x_hand);
+	gripper_goal = _gripper_goal;
+	return make_tuple(xdot_hand, x_hand, gripper_goal);
 }
 
 vector<double> CController::desired_rpy_pybind()
@@ -328,9 +366,6 @@ void CController::control_mujoco()
 			_end_time = _start_time + _motion_time;
 			JointTrajectory.reset_initial(_start_time, _q, tmp);
 			JointTrajectory.update_goal(_q_goal, _qdot_goal, _end_time);
-			// cout<<"initial reset :"<<_motion_time<<endl;
-			// cout<<"cnt plan : "<<_cnt_plan<<endl;
-			// cout<<_q_goal.transpose()<<endl;
 			_bool_joint_motion = true;
 			_x_des_hand = _x_hand;
 			_xdot_des_hand = _xdot_hand;
@@ -348,9 +383,6 @@ void CController::control_mujoco()
 		{
 			_bool_plan(_cnt_plan) = 1;
 			_bool_init = true;
-			// cout<<"time : "<< _t<<endl;
-			// cout<<"current q : "<<_q.transpose()<<endl;
-			// cout<<"goal    Q : "<<_q_goal.transpose()<<endl;
 		}
 	}
 	else if (_control_mode == 2) // task space control
@@ -367,7 +399,6 @@ void CController::control_mujoco()
 			_xdot_des_hand = _xdot_hand;
 			_q_des = _q;
 			_qdot_des = _qdot;
-			
 		}
 
 		HandTrajectory.update_time(_t);
@@ -377,14 +408,13 @@ void CController::control_mujoco()
 		_x_des_hand.segment<3>(3) = CustomMath::GetBodyRotationAngle(_R_des_hand);
 		_xdot_des_hand.segment<3>(3) = HandTrajectory.rotationCubicDot();
 
-		// CLIK();
-		OperationalSpaceControl();
+		CLIK();
+		// OperationalSpaceControl();
 		GripperControl();
 		if (HandTrajectory.check_trajectory_complete() == 1)
 		{
 			_bool_plan(_cnt_plan) = 1;
 			_bool_init = true;
-			// cout<<"time : "<< _t<<endl;
 		}
 	}
 	else if (_control_mode == 3) // circular trajectory heuristic
@@ -408,8 +438,6 @@ void CController::control_mujoco()
 		_x_des_hand.tail(3) = CircularTrajectory.rotation_circular();
 		_xdot_des_hand.tail(3) = CircularTrajectory.rotationdot_circular();
 		_R_des_hand = CustomMath::GetBodyRotationMatrix(_x_des_hand(3), _x_des_hand(4), _x_des_hand(5));
-		// cout<<"3";
-		// cout<<"rpy :"<<_xdot_des_hand.tail(3).transpose()<<endl;
 		OperationalSpaceControl();
 		// CLIK();
 		GripperControl();
@@ -417,14 +445,12 @@ void CController::control_mujoco()
 		{
 			_bool_plan(_cnt_plan) = 1;
 			_bool_init = true;
-			// cout<<"time : "<< _t<<"  (circular"<<endl;
 		}
 
 
 		if((_t - _print_time )> _print_interval)
 		{
 			_print_time = _t;
-			// cout<<"des hand :"<<_x_des_hand.tail(3).transpose()<<endl;
 
 			Matrix3d Trot, temp_rot;
 			Trot << cos(-_robot.ee_align), -sin(-_robot.ee_align), 0,
@@ -436,7 +462,6 @@ void CController::control_mujoco()
 			y = atan2(temp_rot(1, 0), temp_rot(0, 0)) ;
 			p = atan2(-temp_rot(2, 0), sqrt(pow(temp_rot(2, 1), 2) + pow(temp_rot(2, 2), 2)));
 			r = atan2(temp_rot(2, 1), temp_rot(2, 2));
-			// cout<<"rot hand : "<<r<<" "<<p<<" "<<y<<endl;
 		}
 	}
 	else if (_control_mode == 4) // circular trajectory RL
@@ -526,8 +551,8 @@ void CController::control_mujoco()
 		_xdot_des_hand.tail(3) = _drpy;
 		_R_des_hand = CustomMath::GetBodyRotationMatrix(_x_des_hand(3), _x_des_hand(4), _x_des_hand(5));
 
-		// CLIK();
-		OperationalSpaceControl();
+		CLIK();
+		// OperationalSpaceControl();
 
 		GripperControl();
 
@@ -543,7 +568,38 @@ void CController::control_mujoco()
 		// 	_bool_init = true;
 		// }
 	}
+	else if (_control_mode == 7) // joint space control
+	{
+		if (_t - _init_t < 0.1 && _bool_joint_motion == false)
+		{
+			VectorXd tmp;
+			tmp.setZero(7);
 
+			_start_time = _init_t;
+			_end_time = _start_time + _motion_time;
+			JointTrajectory.reset_initial(_start_time, _q, tmp);
+			JointTrajectory.update_goal(_q_goal, _qdot_goal, _end_time);
+			_bool_joint_motion = true;
+			_x_des_hand = _x_hand;
+			_xdot_des_hand = _xdot_hand;
+			_q_des = _q;
+			_qdot_des = _qdot;
+		}
+
+		JointTrajectory.update_time(_t);
+		_q_des = JointTrajectory.position_cubicSpline();
+		_qdot_des = JointTrajectory.velocity_cubicSpline();
+		_qdot_des.head(5) << _qdot_rl.head(5);
+		_q_des.head(5) << _q.head(5) *_dt*_qdot_des.head(5);
+
+		JointControl();
+		GripperControl(); // planning + torque generation
+		if (JointTrajectory.check_trajectory_complete() == 1)
+		{
+			_bool_plan(_cnt_plan) = 1;
+			_bool_init = true;
+		}
+	}
 	_q_pre = _q;
 	_qdot_pre = _qdot;
 }
@@ -889,6 +945,8 @@ void CController::TargetPlanRL(Objects obj, Robot robot, double init_theta, doub
 	_target_plan.back().time = 3.0;
 	_target_plan.back().state = "tovalve_rl";
 	episode_time += _target_plan.back().time;
+	// cout<<"1"<<_target_plan.back().x<<","<<_target_plan.back().y<<","<<_target_plan.back().z<<endl;
+
 
 	// grab valve
 	_target_plan.push_back(TargetTransformMatrix(_obj, _robot, _init_theta));
@@ -902,6 +960,8 @@ void CController::TargetPlanRL(Objects obj, Robot robot, double init_theta, doub
 	_target_plan.back().time = 0.5;
 	_target_plan.back().state = "tovalve_rl";
 	episode_time += _target_plan.back().time;
+	// cout<<"2"<<_target_plan.back().x<<","<<_target_plan.back().y<<","<<_target_plan.back().z<<endl;
+
 
 	/* generate round trajectory in here! */
 	_target_plan.push_back(onvalve);
@@ -929,7 +989,137 @@ void CController::TargetPlanRL2()
 
 }
 
+// jump straight to initial valve grasp pose
 void CController::TargetRePlan_pybind()
+{
+
+	_cnt_plan = 0;
+	_bool_plan.setZero(100);
+	_bool_plan(0) = 1;
+	_time_plan.resize(100);
+	_time_plan.setConstant(-1);
+	_control_mode = 2;
+	_start_time = 0.0;
+	_end_time = 0.0;
+	_motion_time = 0.0;
+	_init_t = _t;
+	_bool_init = true;
+
+	_target_plan.clear();
+	Target home;
+	Target onvalve;
+	// Target detatch;
+
+	// _goal_theta = _goal_theta - _theta_des;
+	double motion_time_const = 10.0;
+	double episode_time = 0;
+	double motion_time = 0;
+
+	home.q_goal.setZero(7);
+	home.q_goal << _q_home;
+	// Matrix3d _Tge;
+	// _Tge << cos(_robot.ee_align), -sin(_robot.ee_align), 0,
+	// 	sin(_robot.ee_align), cos(_robot.ee_align), 0,
+	// 	0, 0, 1;
+
+	// home.state = "jointspace";
+	onvalve.state = "onvalve_rl";
+	// detatch.state = "tovalve_rl";
+
+	// if (strcmp(_obj.name, "VALVE") == 0){
+	// 	_init_theta = obj_angle;
+	// }
+
+	_target_plan.push_back(TargetTransformMatrix(_obj, _robot, _init_theta));
+	_target_plan.back().gripper = _gripper_close;
+	_target_plan.back().time = 0.5;
+	_target_plan.back().state = "tovalve_rl";
+	episode_time += _target_plan.back().time;
+
+	/* generate round trajectory in here! */
+	_target_plan.push_back(onvalve);
+	motion_time = abs(motion_time_const * abs(_goal_theta - _init_theta) * _obj.r_margin.norm());
+	_target_plan.back().time = motion_time;
+
+	// // release valve
+	// _target_plan.push_back(TargetTransformMatrix(obj_above, _robot, _goal_theta));
+	// _target_plan.back().gripper = 0.04;
+	// _target_plan.back().time = 0.5;
+	// _target_plan.back().state = "tovalve_rl";
+	// episode_time += _target_plan.back().time;
+}
+
+// release -> initial grasp pose 
+void CController::TargetRePlan2_pybind(std::array<double, 7> q_goal)
+{
+	_cnt_plan = 0;
+	_bool_plan.setZero(100);
+	_bool_plan(0) = 1;
+	_time_plan.resize(100);
+	_time_plan.setConstant(-1);
+	_control_mode = 2;
+	_start_time = 0.0;
+	_end_time = 0.0;
+	_motion_time = 0.0;
+	_init_t = _t;
+	_bool_init = true;
+
+	_target_plan.clear();
+	Target open;
+	Target reset;
+	Target onvalve;
+	// Target detatch;
+
+	// _goal_theta = _goal_theta - _theta_des;
+	double motion_time_const = 10.0;
+	double episode_time = 0;
+	double motion_time = 0;
+	open.state = "jointspace";
+	reset.state = "jointspace";
+	onvalve.state = "onvalve_rl";
+	// detatch.state = "tovalve_rl";
+
+
+	// if (strcmp(_obj.name, "VALVE") == 0){
+	// 	_init_theta = obj_angle;
+	// }
+
+	open.q_goal.setZero(7);
+	open.q_goal << _q;
+	open.gripper = 0.02;
+	open.time = 1;
+	_target_plan.push_back(open);
+
+	reset.q_goal.setZero(7);
+	for (int i=0; i<7; i++){
+		reset.q_goal(i) = q_goal[i];
+	}
+	reset.gripper = _gripper_open;
+	reset.time = 4;
+	_target_plan.push_back(reset);
+
+
+	_target_plan.push_back(TargetTransformMatrix(_obj, _robot, _init_theta));
+	_target_plan.back().gripper = _gripper_close;
+	_target_plan.back().time = 0.5;
+	_target_plan.back().state = "tovalve_rl";
+	episode_time += _target_plan.back().time;
+
+	/* generate round trajectory in here! */
+	_target_plan.push_back(onvalve);
+	motion_time = abs(motion_time_const * abs(_goal_theta - _init_theta) * _obj.r_margin.norm());
+	_target_plan.back().time = motion_time;
+
+	// // release valve
+	// _target_plan.push_back(TargetTransformMatrix(obj_above, _robot, _goal_theta));
+	// _target_plan.back().gripper = 0.04;
+	// _target_plan.back().time = 0.5;
+	// _target_plan.back().state = "tovalve_rl";
+	// episode_time += _target_plan.back().time;
+}
+
+// move back -> home -> to valve 
+void CController::TargetRePlan3_pybind(std::array<double, 7> q_goal)
 {
 
 	_cnt_plan = 0;
@@ -945,7 +1135,7 @@ void CController::TargetRePlan_pybind()
 
 	_target_plan.clear();
 
-	Target home;
+	Target reset;
 	Target onvalve;
 	Target detatch;
 
@@ -958,12 +1148,12 @@ void CController::TargetRePlan_pybind()
 		sin(_robot.ee_align), cos(_robot.ee_align), 0,
 		0, 0, 1;
 
-	home.state = "jointspace";
+	reset.state = "joint_rl";
 	onvalve.state = "onvalve_rl";
 	detatch.state = "tovalve_rl";
 
 	VectorXd tmp(3);
-	tmp << 0, 0, -_obj.o_margin.norm();
+	tmp << 0, 0, -_obj.o_margin.norm()*0.01;
 	tmp << CustomMath::GetBodyRotationMatrix(_x_hand(3), _x_hand(4), _x_hand(5)) * tmp;
 	detatch.x = _x_hand(0) + tmp(0);
 	detatch.y = _x_hand(1) + tmp(1);
@@ -972,27 +1162,16 @@ void CController::TargetRePlan_pybind()
 	detatch.pitch = _x_hand(4);
 	detatch.yaw = _x_hand(5);
 
-	// tmp << 0, 0, -_obj.o_margin.norm()*0.5;
-	// tmp << _R_des_hand  * tmp;
-
-	// cout<<"(x,y,z ) "<<detatch.x<<","<<detatch.y<<","<<detatch.z<<endl;
-	// cout<<"(x,y,z?) "<< _x_hand(0) + tmp(0)<<","<<_x_hand(1) + tmp(1)<<","<<_x_hand(2) + tmp(2)<<endl;
 
 	detatch.gripper = 0.04;
 	detatch.time = 1.0;
 
 	// detatch from valve
 	_target_plan.push_back(detatch);
-	_target_plan.push_back(home);
-
-	// initial valve grasping
-	Objects obj_above = _obj;
-	obj_above.o_margin = obj_above.o_margin + obj_above.o_margin.normalized() * 0.05;
-	_target_plan.push_back(TargetTransformMatrix(obj_above, _robot, _init_theta));
-	_target_plan.back().gripper = 0.04;
-	_target_plan.back().time = 2.5;
-	_target_plan.back().state = "tovalve_rl";
-	episode_time += _target_plan.back().time;
+	reset.q_goal.setZero(7);
+	reset.q_goal << _q_goal_data[1];
+	reset.time = 5;
+	_target_plan.push_back(reset);
 
 	// grab valve
 	_target_plan.push_back(TargetTransformMatrix(_obj, _robot, _init_theta));
@@ -1013,13 +1192,8 @@ void CController::TargetRePlan_pybind()
 
 	_target_plan.back().time = motion_time;
 
-	// release valve
-	_target_plan.push_back(TargetTransformMatrix(obj_above, _robot, _goal_theta));
-	_target_plan.back().gripper = 0.04;
-	_target_plan.back().time = 0.5;
-	_target_plan.back().state = "tovalve_rl";
-	episode_time += _target_plan.back().time;
 }
+
 
 // Joint space and Task space motion.
 
@@ -1056,11 +1230,6 @@ void CController::motionPlan()
 			_rpy_goal_hand(1) = _x_hand(4) + 0.3;
 			_rpy_goal_hand(2) = _x_hand(5) - 0.5;
 			_gripper_goal = 0.0;
-			// cout<<"current hand : "<<_x_hand.transpose()<<endl;
-			// cout<<"goal    hand : "<<_pos_goal_hand.transpose()<<_rpy_goal_hand.transpose()<<endl;
-			// printf("current hand rot : \n"); CustomMath::PrintEigenMatrix(Model._R_hand);
-			// printf("goal    hand rot : \n"); CustomMath::PrintEigenMatrix(CustomMath::GetBodyRotationMatrix(_rpy_goal_hand(0),_rpy_goal_hand(1),_rpy_goal_hand(2)));
-
 			reset_target(_time_plan(_cnt_plan), _pos_goal_hand, _rpy_goal_hand);
 		}
 		else if (_cnt_plan == 4)
@@ -1077,16 +1246,10 @@ void CController::motionPlan()
 			_rpy_goal_hand(1) = _x_hand(4) - 0.3;
 			_rpy_goal_hand(2) = _x_hand(5) + 0.5;
 			_gripper_goal = 0.04;
-			// cout<<"current hand : "<<_x_hand.transpose()<<endl;
-			// cout<<"goal    hand : "<<_pos_goal_hand.transpose()<<_rpy_goal_hand.transpose()<<endl;
-			// printf("current hand rot : \n"); CustomMath::PrintEigenMatrix(Model._R_hand);
-			// printf("goal    hand rot : \n"); CustomMath::PrintEigenMatrix(CustomMath::GetBodyRotationMatrix(_rpy_goal_hand(0),_rpy_goal_hand(1),_rpy_goal_hand(2)));
-
 			reset_target(_time_plan(_cnt_plan), _pos_goal_hand, _rpy_goal_hand);
 		}
 		else if (_cnt_plan == 6)
 		{
-			// cout<<"current hand : "<<_x_hand.transpose()<<endl;
 
 			reset_target(_time_plan(_cnt_plan), _q);
 		}
@@ -1124,13 +1287,7 @@ void CController::motionPlan_taskonly()
 			_rpy_goal_hand(0) = _x_hand(3) - 0.5;
 			_rpy_goal_hand(1) = _x_hand(4) + 0.5;
 			_rpy_goal_hand(2) = _x_hand(5) + 0.5;
-			// cout<<"A diagonal :"<<_A_diagonal.diagonal().transpose()<<endl;
-			// printf("/////////////////////////////////\n");
-			// cout<<"current hand : "<<_x_hand.transpose()<<endl;
-			// cout<<"goal    hand : "<<_pos_goal_hand.transpose()<<_rpy_goal_hand.transpose()<<endl;
-			// printf("current hand rot : \n"); CustomMath::PrintEigenMatrix(Model._R_hand);
-			// printf("goal    hand rot : \n"); CustomMath::PrintEigenMatrix(CustomMath::GetBodyRotationMatrix(_rpy_goal_hand(0),_rpy_goal_hand(1),_rpy_goal_hand(2)));
-
+			
 			reset_target(_time_plan(_cnt_plan), _pos_goal_hand, _rpy_goal_hand);
 		}
 		else if (_cnt_plan == 4)
@@ -1148,11 +1305,7 @@ void CController::motionPlan_taskonly()
 			_rpy_goal_hand(0) = _x_hand(3);
 			_rpy_goal_hand(1) = _x_hand(4);
 			_rpy_goal_hand(2) = _x_hand(5) + M_1_PI;
-			// printf("/////////////////////////////////\n");
-			// cout<<"goal    hand : "<<_pos_goal_hand.transpose()<<_rpy_goal_hand.transpose()<<endl;
-			// printf("current hand rot : \n"); CustomMath::PrintEigenMatrix(Model._R_hand);
-			// printf("goal    hand rot : \n"); CustomMath::PrintEigenMatrix(CustomMath::GetBodyRotationMatrix(_rpy_goal_hand(0),_rpy_goal_hand(1),_rpy_goal_hand(2)));
-
+			
 			reset_target(_time_plan(_cnt_plan), _pos_goal_hand, _rpy_goal_hand);
 		}
 		else if (_cnt_plan == 6)
@@ -1443,6 +1596,7 @@ void CController::motionPlan_RL(string object)
 	if (_bool_plan(_cnt_plan) == 1)
 	{
 
+		
 		if (_cnt_plan > _target_plan.size())
 		{
 
@@ -1451,12 +1605,17 @@ void CController::motionPlan_RL(string object)
 		}
 
 		else
-		{
-
+		{	
+			
+			_q_goal_data.push_back(_q);
 			target = _target_plan[_cnt_plan];
+			_gripper_goal= target.gripper;
 			if (target.state == "jointspace")
 			{
-				reset_target(3.0, _q_home);
+				// cout<<"cnt plan :"<<_cnt_plan<<endl;
+				// cout<<"target.q_goal : "<<target.q_goal<<"|||"<<target.time<<endl;
+				
+				reset_target(target.time, target.q_goal);
 			}
 			else if (target.state == "onvalve_rl")
 			{
@@ -1473,6 +1632,7 @@ void CController::motionPlan_RL(string object)
 			else if (target.state == "tovalve_rl")
 			{
 
+				// cout<<"task space control\n"<<endl;
 				_pos_goal_hand(0) = target.x;
 				_pos_goal_hand(1) = target.y;
 				_pos_goal_hand(2) = target.z;
@@ -1480,16 +1640,25 @@ void CController::motionPlan_RL(string object)
 				_rpy_goal_hand(1) = target.pitch;
 				_rpy_goal_hand(2) = target.yaw;
 
-				_gripper_goal= target.gripper;
+				// _gripper_goal= target.gripper;
 				_time_plan(_cnt_plan) = target.time;
 
 				// reset_target(target.time, _pos_goal_hand, _rpy_goal_hand, target.state); //control mode = 5 -> RL action
 				reset_target(target.time, _pos_goal_hand, _rpy_goal_hand); // control mode = 2 -> planned trajectory
 			}
+			if (target.state == "joint_rl")
+			{
+				// cout<<"cnt plan :"<<_cnt_plan<<endl;
+				// cout<<"target.q_goal : "<<target.q_goal<<"|||"<<target.time<<endl;
+				
+				reset_target(target.time, target.q_goal, target.state);
+			}
 		}
 		_cnt_plan = _cnt_plan + 1;
 	}
 }
+
+
 
 void CController::reset_target(double motion_time, VectorXd target_joint_position)
 {
@@ -1504,7 +1673,9 @@ void CController::reset_target(double motion_time, VectorXd target_joint_positio
 
 void CController::reset_target(double motion_time, VectorXd target_joint_position, VectorXd target_joint_velocity)
 {
+	
 	_control_mode = 1;
+
 	_motion_time = motion_time;
 	_bool_joint_motion = false;
 	_bool_ee_motion = false;
@@ -1576,15 +1747,21 @@ void CController::reset_target(double motion_time, string state)
 	_motion_time = motion_time;
 }
 
+void CController::reset_target(double motion_time, VectorXd target_joint_position, string state)
+{
+	_control_mode = 7;
+	_motion_time = motion_time;
+	_bool_joint_motion = false;
+	_bool_ee_motion = false;
+
+	_q_goal = target_joint_position.head(7);
+	_qdot_goal.setZero();
+}
+
 void CController::JointControl()
 {
 	_torque.setZero();
 	_torque = Model._A * (400 * (_q_des - _q) + 40 * (_qdot_des - _qdot)) + Model._bg;
-	// _torque = _kpj_diagonal * (_q_des - _q) + _kdj_diagonal * (_qdot_des - _qdot);
-
-	// _torque = Model._A * (_kpj * (_q_des - _q) + _kdj * (_qdot_des - _qdot)) + Model._bg;
-	// cout<<"desired q : "<<_q_des.transpose()<<endl;
-	// cout<<"now q :     "<<_q.transpose()<<endl;
 }
 
 void CController::GripperControl()
@@ -1615,10 +1792,7 @@ void CController::GripperControl()
 	{
 		_gripper_des = _init_gripper + (_gripper_goal - _init_gripper) * du / _motion_time;
 	}
-	// cout<<"gripper now :"<<_gripper.transpose()<<"  gripper des:"<<_gripper_des.transpose()<<"  _gripper dot:"<<_gripperdot.transpose()<<endl;
 	_grippertorque = _kpj_gripper * (_gripper_des - _gripper) - _kdj_gripper * (_gripperdot); // PD simple damping control (_gripperdot_goal = 0 0)
-	// cout<<"gripper goal : "<<_gripper_goal<<"  gripper des : "<<_gripper_des<<"  du : "<<du<<" torque : "<<_grippertorque<<endl;
-	// cout<<"init gripper : "<<_init_gripper<<endl;
 }
 
 // Closed Loop Inverse Kinematics
@@ -1645,32 +1819,10 @@ void CController::CLIK()
 	_xdot_err_hand.segment(0, 3) = _xdot_des_hand.head(3) - _xdot_hand.head(3);
 	_xdot_err_hand.segment(3, 3) = -CustomMath::getPhi(_Rdot_hand, _Rdot_des_hand);
 
-	// cout<<"_x d - x now:"<<_x_err_hand.transpose()<<endl;
-	// cout<<"xd d - xdnow :"<<(_xdot_des_hand - _xdot_hand).transpose()<<endl;
-	// cout<<"xd des : "<<_xdot_des_hand.transpose()<<endl;
-	// cout<<"xd now : "<<_xdot_hand.transpose()<<endl<<endl;
-	// Matrix3d rot_dot = CustomMath::GetBodyRotationMatrix(_xdot_des_hand(3),_xdot_des_hand(4), _xdot_des_hand(5));
-	// cout<<"rdpy : "<<_xdot_des_hand.tail(3)<<endl;
-	// cout<<"rot :\n"<<rot_dot<<endl;
-	// if (_control_mode == 4){
-	// 	cout<<"_torque :"<<_torque.transpose()<<endl;
-	// 	cout<<"_q_des - q : "<<(_q_des - _q).transpose()<<endl;
-	// 	cout<<"_qddes - qd: "<<(_qdot_des - _qdot).transpose()<<endl;
-	// 	cout<<"_x d - x now:"<<_x_err_hand.transpose()<<endl;
-	// 	cout<<"xd d - xdnow :"<<(_xdot_des_hand - _xdot_hand).transpose()<<endl;
-	// 	cout<<"qdot des : "<<_qdot_des.transpose()<<endl;
-	// 	cout<<"qdot     : "<<_qdot.transpose()<<endl;
-
-	// 	cout<<"xd des : "<<_xdot_des_hand.transpose()<<endl;
-	// 	cout<<"xd now : "<<_xdot_hand.transpose()<<endl<<endl;;
-	// 	// clock_t start = clock();
-	// 	// while(clock() - start < 100000);
-	// }
 }
 
 void CController::OperationalSpaceControl()
 {
-	// cout<<"_xdot :"<<_xdot_des_hand.transpose()<<endl;
 	_J_bar_hands = CustomMath::pseudoInverseQR(_J_hands);
 	_lambda = CustomMath::pseudoInverseQR(_J_hands.transpose()) * Model._A * _J_bar_hands;
 
@@ -1684,20 +1836,8 @@ void CController::OperationalSpaceControl()
 	_xdot_err_hand.segment(0, 3) = _xdot_des_hand.head(3) - _xdot_hand.head(3);
 	_xdot_err_hand.segment(3, 3) = -CustomMath::getPhi(_Rdot_hand, _Rdot_des_hand);
 	_force = _kpj * _x_err_hand + _kdj * _xdot_err_hand;
-
 	_torque = _J_hands.transpose() * _lambda * _force + Model._bg;
-	// if ((_control_mode == 4)||(_control_mode == 2)){
-	// 	cout<<"_x d - x now:"<<_x_err_hand.transpose()<<endl;
-	// 	cout<<"xd d - xdnow :"<<(_xdot_des_hand - _xdot_hand).transpose()<<endl;
-	// 	cout<<"xd des : "<<_xdot_des_hand.transpose()<<endl;
-	// 	cout<<"xd now : "<<_xdot_hand.transpose()<<endl<<endl;
-	// 	cout<<"_force :"<<_force.transpose()<<endl;
-	// 	cout<<"lambda :"<<_lambda.transpose()<<endl;
-	// 	// if (_control_mode == 4){
-	// 	// 	clock_t start = clock();
-	// 	// 	while(clock() - start < 100000);
-	// 	// }
-	// }
+
 }
 
 void CController::Initialize()
@@ -1721,6 +1861,7 @@ void CController::Initialize()
 	_q.setZero(_k);
 	_qdot.setZero(_k);
 	_torque.setZero(_k);
+	_qdot_rl.setZero(_k);
 
 	_gripper=0;
 	_gripperdot=0; // gripper 속도 : 50mm/s
@@ -1765,6 +1906,7 @@ void CController::Initialize()
 	_q_home(6) = 45*DEG2RAD;//0.7853981633974483; // 45
 
 	_gripper_close = 0.0;
+	_gripper_open = 0.04;
 
 	// 0.0,
 	//     -0.7853981633974483,
@@ -1840,7 +1982,8 @@ void CController::Initialize()
 	_Rdot_hand.setZero();
 	_lambda.setZero(6, 6);
 	_force.setZero(6);
-
+	_compensate_force.setZero(6);
+	_compensated_force.setZero(6);
 	_I.setIdentity(7, 7);
 	_rotation_obj.setIdentity(3, 3);
 	_Tvr.setIdentity(4, 4);
@@ -1853,6 +1996,7 @@ void CController::Initialize()
 	_print_time = 0;
 	_print_interval = 0.1;
 	_target_plan.clear();
+	_q_goal_data.clear();
 	dr.clear();
 	dp.clear();
 	dy.clear();
@@ -1868,9 +2012,7 @@ void CController::Initialize()
 	_rpy_des.setZero(3);
 
 	
-	_generate_dxyz = false;
-
-	load_model();
+	_generate_dxyz = true;
 }
 
 namespace py = pybind11;
@@ -1886,12 +2028,15 @@ PYBIND11_MODULE(controller, m)
 		.def("initialize", &CController::Initialize)
 		.def("put_action", &CController::put_action_pybind)
 		.def("put_action2", &CController::put_action2_pybind)
+		.def("put_action3", &CController::put_action3_pybind)
 		.def("randomize_env", &CController::randomize_env_pybind)
 		.def("get_ee", &CController::get_ee_pybind) 
-		.def("get_ee_simple", &CController::get_ee_simple_pybind) 
 		.def("control_mode", &CController::control_mode_pybind)
 		.def("desired_rpy", &CController::desired_rpy_pybind)
-		.def("target_replan", &CController::TargetRePlan_pybind);
+		.def("get_force", &CController::get_force_pybind)		
+		.def("target_replan", &CController::TargetRePlan_pybind)
+		.def("target_replan2", &CController::TargetRePlan2_pybind)
+		.def("target_replan3", &CController::TargetRePlan3_pybind);
 	//   .def("write", &CController::write);
 
 #ifdef VERSION_INFO

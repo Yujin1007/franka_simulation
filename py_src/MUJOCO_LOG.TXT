@@ -5551,3 +5551,21 @@ WARNING: Too many contacts. Either the arena memory is full, or nconmax is speci
 Thu Oct 26 16:56:30 2023
 WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstable. Time = 4.5060.
 
+Tue Dec 12 17:15:27 2023
+WARNING: mju_openResource: unknown file '/home/kist-robot2/catkin_ws/src/franka_emika_panda/model/franka_emika_panda/scene_valve.xml'
+
+Tue Dec 12 17:16:23 2023
+WARNING: File size over 2GB is not supported. File: './'
+
+Tue Dec 12 17:16:23 2023
+WARNING: mju_openResource: unknown file './'
+
+Wed Dec 13 14:37:14 2023
+WARNING: mju_openResource: unknown file '/home/kist-robot2/catkin_ws/src/franka_emika_panda/model/franka_emika_panda/scene_valve.xml'
+
+Thu Dec 14 17:18:54 2023
+WARNING: mju_openResource: unknown file '/home/kist-robot2/catkin_ws/src/franka_emika_panda/model/franka_emika_panda/scene_valve.xml'
+
+Fri Dec 15 15:45:11 2023
+ERROR: m->nu changed
+
