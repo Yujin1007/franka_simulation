@@ -90,7 +90,6 @@ def main(args):
 
         if isheuristic:  # run heuristic code with controller
             env.run(ITERATION)
-
         else:  # test trained model
             eval(env, MODEL_PATH)
 
