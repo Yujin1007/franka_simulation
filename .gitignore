@@ -42,6 +42,10 @@ py_src/models/__pycache__
 py_src/models/tqc/__pycache__
 py_src/models/classifier/__pycache__
 
+# pypi packages
+py_src/franka_valve.egg-info
+dist/
+
 MUJOCO_LOG.TXT
 .vscode
 .idea

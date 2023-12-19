@@ -38,7 +38,7 @@ HOME = os.getcwd()
 class Fr3:
     metadata = {"render_modes": ["human"], "render_fps": 30}
 
-    def __init__(self):
+    def __init__(self, history):
         self.k = 7  # for jacobian calculation
         self.dof = 9  # all joints (include gripper joint)
 
@@ -47,7 +47,7 @@ class Fr3:
         self.controller = controller.CController(self.k)
         self._torque = np.zeros(self.dof, dtype=np.float64)
         self.rendering = False
-        self.stack = 5
+        self.stack = history
 
     # Read json file of contact information
     def read_contact_json(self, json_name):

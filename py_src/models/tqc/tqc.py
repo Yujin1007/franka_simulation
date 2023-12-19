@@ -7,10 +7,6 @@ from models.tqc.trainer import Trainer
 from models.tqc.structures import ReplayBuffer, Actor, Critic
 
 # Constants
-MAX_TIMESTEPS = 1e6
-BATCH_SIZE = 256
-SAVE_FREQ = 1e5
-
 NUM_EP = 6
 
 HOME = os.getcwd()
@@ -18,12 +14,16 @@ MODELS_DIR = os.path.join(HOME, "log", "rpy", "handle_only5")
 MODELS_SUBDIR = os.path.join(MODELS_DIR, "10.0")
 
 class TQC:
-    def __init__(self, env, policy_kwargs):
+    def __init__(self, env, policy_kwargs, max_timesteps, batch_size, save_freq):
         super(TQC, self).__init__()
         self.env = env
         state_dim = self.env.observation_space.shape
         action_dim = self.env.action_space.shape[0]
         self.replay_buffer = ReplayBuffer(state_dim, action_dim)
+
+        self.max_timesteps = max_timesteps
+        self.batch_size = batch_size
+        self.save_freq = save_freq
 
         self.actor = Actor(state_dim, action_dim).to(DEVICE)
         self.critic = Critic(state_dim, action_dim, policy_kwargs["n_quantiles"], policy_kwargs["n_critics"]).to(DEVICE)
@@ -50,7 +50,7 @@ class TQC:
         episode_num = 0
 
         self.actor.train()
-        for t in range(int(MAX_TIMESTEPS)):
+        for t in range(int(self.max_timesteps)):
             action = self.actor.select_action(state)
 
             next_state, reward, done, _ = self.env.step(action)
@@ -62,9 +62,9 @@ class TQC:
             episode_return += reward
 
             # Train agent after collecting sufficient data
-            if t >= BATCH_SIZE:
-                self.trainer.train(self.replay_buffer, BATCH_SIZE)
-            if (t + 1) % SAVE_FREQ == 0:
+            if t >= self.batch_size:
+                self.trainer.train(self.replay_buffer, self.batch_size)
+            if (t + 1) % self.save_freq == 0:
                 save_flag = True
 
             if done:
@@ -78,7 +78,7 @@ class TQC:
                 episode_num += 1
                 
             if save_flag:
-                path = os.path.join(MODELS_DIR, str((t + 1) // SAVE_FREQ))
+                path = os.path.join(MODELS_DIR, str((t + 1) // self.save_freq))
                 os.makedirs(path, exist_ok=True)
                 self.trainer.save(path)
                 np.save(os.path.join(path, "reward"), episode_data)

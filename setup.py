@@ -12,7 +12,7 @@ setup(
     keywords=["reinforcement learning", "RL", "robotics", "robot", "franka", "emika", "panda"],
     platforms=[sys.platform],
 
-    install_requires=["gym", "numpy", "gymnasium", "tensorborad", "torch", "torchvision", "torchaudio", "pytorch-cuda", "pyparsing", "stable-baselines3", "sb3-contrib", "six"],
+    install_requires=["torch", "numpy", "mujoco", "gym", "scipy"],
     packages=find_packages(where="py_src"),
     package_dir={"":"py_src"},
     python_requires=">=3.8",
