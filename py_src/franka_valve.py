@@ -6,10 +6,6 @@ from fr3_envs.fr3_tqc import Fr3_tqc
     
 HOME = os.getcwd()
 
-MAX_TIMESTEPS = 1e6
-BATCH_SIZE = 256
-SAVE_FREQ = 1e5
-
 def check_valid_object(object):
     valid_values = ["handle", "valve"]
 
@@ -24,29 +20,33 @@ def train_franka_valve(
         rw_gr         = 1,
         history       = 5,
         object        = "handle",
-        max_timesteps = MAX_TIMESTEPS, 
-        batch_size    = BATCH_SIZE, 
-        save_freq     = SAVE_FREQ
+        max_timesteps = 1e6, 
+        batch_size    = 256, 
+        save_freq     = 1e5,
+        n_critics     = 5,
+        n_quantiles   = 25
     ):
     '''
     Train franka_valve
 
-    - hyperparameters for an environment
-    :param acc: Reward for difference of rpy (Reward), default: 3
-    :param c: Reward for collision (Penalty), default: 10
-    :param b: Reward for joint boundary limit (Penalty), default: 1
-    :param gr: Reward for grasping an object (Reward), default: 1
-    :param history: The length of a history to observe, default: 5
-    :param object: Object to rotate, default: handle, choices: [handle, valve]
+    @ hyperparameters for an environment
+    :param acc: Reward for difference of rpy (Reward)
+    :param c: Reward for collision (Penalty)
+    :param b: Reward for joint boundary limit (Penalty)
+    :param gr: Reward for grasping an object (Reward)
+    :param history: The length of a history to observe
+    :param object: Object to rotate, choices: [handle, valve]
 
-    - hyperparameters for a model
-    :max_timesteps: Max timesteps, default: 1e6 (1,000,000)
-    :batch_size: Batch size, default: 256
-    :save_freq: Save frequency, default: 1e5 (100,000)
+    @ hyperparameters for a model
+    :param max_timesteps: Max timesteps
+    :param batch_size: Batch size
+    :param save_freq: Save frequency
+    :param n_critics: The number of critics
+    :param n_quantiles: The number of quantiles
     '''
     check_valid_object(object)
     env = Fr3_tqc(rw_acc, rw_c, rw_b, rw_gr, history, object)
-    policy_kwargs = dict(n_critics=5, n_quantiles=25)
+    policy_kwargs = dict(n_critics=n_critics, n_quantiles=n_quantiles)
     model = TQC(env, policy_kwargs, max_timesteps, batch_size, save_freq)
     model.train()
 
@@ -58,29 +58,33 @@ def eval_franka_valve(
         rw_gr         = 1,
         history       = 5,
         object        = "handle",
-        max_timesteps = MAX_TIMESTEPS, 
-        batch_size    = BATCH_SIZE, 
-        save_freq     = SAVE_FREQ
+        max_timesteps = 1e6, 
+        batch_size    = 256, 
+        save_freq     = 1e5,
+        n_critics     = 5,
+        n_quantiles   = 25
     ):
     '''
     Evaluate franka_valve
 
-    - hyperparameters for an environment
-    :param acc: Reward for difference of rpy (Reward), default: 3
-    :param c: Reward for collision (Penalty), default: 10
-    :param b: Reward for joint boundary limit (Penalty), default: 1
-    :param gr: Reward for grasping an object (Reward), default: 1
-    :param history: The length of a history to observe, default: 5
-    :param object: Object to rotate, default: handle, choices: [handle, valve]
+    @ hyperparameters for an environment
+    :param acc: Reward for difference of rpy (Reward)
+    :param c: Reward for collision (Penalty)
+    :param b: Reward for joint boundary limit (Penalty)
+    :param gr: Reward for grasping an object (Reward)
+    :param history: The length of a history to observe
+    :param object: Object to rotate, choices: [handle, valve]
 
-    - hyperparameters for a model
-    :max_timesteps: Max timesteps, default: 1e6 (1,000,000)
-    :batch_size: Batch size, default: 256
-    :save_freq: Save frequency, default: 1e5 (100,000)
+    @ hyperparameters for a model
+    :param max_timesteps: Max timesteps
+    :param batch_size: Batch size
+    :param save_freq: Save frequency
+    :param n_critics: The number of critics
+    :param n_quantiles: The number of quantiles
     '''
     check_valid_object(object)
     env = Fr3_tqc(rw_acc, rw_c, rw_b, rw_gr, history, object)
-    policy_kwargs = dict(n_critics=5, n_quantiles=25)
+    policy_kwargs = dict(n_critics=n_critics, n_quantiles=n_quantiles)
     model = TQC(env, policy_kwargs, max_timesteps, batch_size, save_freq)
     model.eval()
 
