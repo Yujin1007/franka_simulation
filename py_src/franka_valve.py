@@ -29,15 +29,17 @@ def train_franka_valve(
     '''
     Train franka_valve
 
-    @ hyperparameters for an environment
-    :param acc: Reward for variation of output action (Penalty)
-    :param c: Reward for collision (Penalty)
-    :param b: Reward for joint boundary limit (Penalty)
-    :param gr: Reward for grasping an object (Reward)
-    :param history: The length of a history to observe
+    Hyperparameters for environments
+    --------------------------------
+    :param acc: Negative reward for variation of output action
+    :param c: Negative reward for collision
+    :param b: Negative reward for joint boundary limit
+    :param gr: Positive reward for grasping an object
+    :param history: The length of the history to observe
     :param object: Object to rotate, choices: [handle, valve]
 
-    @ hyperparameters for a model
+    Hyperparameters for models
+    --------------------------
     :param max_timesteps: Max timesteps
     :param batch_size: Batch size
     :param save_freq: Save frequency
@@ -67,15 +69,17 @@ def eval_franka_valve(
     '''
     Evaluate franka_valve
 
-    @ hyperparameters for an environment
-    :param acc: Reward for variation of output action (Penalty)
-    :param c: Reward for collision (Penalty)
-    :param b: Reward for joint boundary limit (Penalty)
-    :param gr: Reward for grasping an object (Reward)
-    :param history: The length of a history to observe
+    Hyperparameters for environments
+    --------------------------------
+    :param acc: Negative reward for variation of output action
+    :param c: Negative reward for collision
+    :param b: Negative reward for joint boundary limit
+    :param gr: Positive reward for grasping an object
+    :param history: The length of the history to observe
     :param object: Object to rotate, choices: [handle, valve]
 
-    @ hyperparameters for a model
+    Hyperparameters for models
+    --------------------------
     :param max_timesteps: Max timesteps
     :param batch_size: Batch size
     :param save_freq: Save frequency
@@ -96,7 +100,7 @@ if __name__ == "__main__":
     parser.add_argument("--rw_c", help="Negative reward for collision", type=int,default=1)
     parser.add_argument("--rw_b", help="Negative reward for joint boundary limit", type=int, default=1)
     parser.add_argument("--rw_gr", help="Positive reward for grasping an object", type=float, default=1.0)
-    parser.add_argument("--history", help="The length of a history to observe", type=int, default=5)
+    parser.add_argument("--history", help="The length of the history to observe", type=int, default=5)
     parser.add_argument("--object", help="Object to rotate", default="handle", choices=["handle", "valve"])
 
     args = parser.parse_args()

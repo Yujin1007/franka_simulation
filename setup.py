@@ -19,7 +19,7 @@ setup(
 
     classifiers=[
         "Programming Language::Python::3",
-        "License :: OSI Approved :: MIT License",
+        "License::OSI Approved::MIT License",
         "Operating System::POSIX::Linux"
     ],
     package_data={"py_src/assets/cpp_library": ["controller.so"]},
