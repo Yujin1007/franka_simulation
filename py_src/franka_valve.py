@@ -30,7 +30,7 @@ def train_franka_valve(
     Train franka_valve
 
     @ hyperparameters for an environment
-    :param acc: Reward for difference of rpy (Reward)
+    :param acc: Reward for variation of output action (Penalty)
     :param c: Reward for collision (Penalty)
     :param b: Reward for joint boundary limit (Penalty)
     :param gr: Reward for grasping an object (Reward)
@@ -68,7 +68,7 @@ def eval_franka_valve(
     Evaluate franka_valve
 
     @ hyperparameters for an environment
-    :param acc: Reward for difference of rpy (Reward)
+    :param acc: Reward for variation of output action (Penalty)
     :param c: Reward for collision (Penalty)
     :param b: Reward for joint boundary limit (Penalty)
     :param gr: Reward for grasping an object (Reward)
@@ -92,10 +92,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--exec", help="Execution mode", type=str, default="eval", choices=["train", "eval"])
-    parser.add_argument("--rw_acc", help="Reward for difference of rpy", type=int, default=3)
-    parser.add_argument("--rw_c", help="Reward for collision", type=int,default=1)
-    parser.add_argument("--rw_b", help="Reward for joint boundary limit", type=int, default=1)
-    parser.add_argument("--rw_gr", help="Reward for grasping an object", type=float, default=1.0)
+    parser.add_argument("--rw_acc", help="Negative reward for variation of output action", type=int, default=3)
+    parser.add_argument("--rw_c", help="Negative reward for collision", type=int,default=1)
+    parser.add_argument("--rw_b", help="Negative reward for joint boundary limit", type=int, default=1)
+    parser.add_argument("--rw_gr", help="Positive reward for grasping an object", type=float, default=1.0)
     parser.add_argument("--history", help="The length of a history to observe", type=int, default=5)
     parser.add_argument("--object", help="Object to rotate", default="handle", choices=["handle", "valve"])
 
