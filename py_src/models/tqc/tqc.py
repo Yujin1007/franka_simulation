@@ -10,11 +10,9 @@ from models.tqc.structures import ReplayBuffer, Actor, Critic
 NUM_EP = 6
 
 HOME = os.getcwd()
-MODELS_DIR = os.path.join(HOME, "log", "rpy", "handle_only5")
-MODELS_SUBDIR = os.path.join(MODELS_DIR, "10.0")
 
 class TQC:
-    def __init__(self, env, policy_kwargs, max_timesteps, batch_size, save_freq):
+    def __init__(self, env, policy_kwargs, max_timesteps, batch_size, save_freq, model_path, epochs_index):
         super(TQC, self).__init__()
         self.env = env
         state_dim = self.env.observation_space.shape
@@ -36,6 +34,25 @@ class TQC:
                                discount=0.99,
                                tau=0.005,
                                target_entropy=-np.prod(env.action_space.shape).item())
+        
+        self.models_dir = os.path.join(HOME, "models", "tqc", "model", model_path)
+        self.models_subdir = self.get_models_subdir(epochs_index)
+
+    def get_largest_numbered_folder(self):
+        folders = [folder for folder in os.listdir(self.models_dir)]
+        folders.sort(key=lambda x: float(x), reverse=True)
+        return folders[0]
+
+    def get_models_subdir(self, epochs_index):
+        # Train mode
+        if epochs_index == "-1.0":
+            return None
+        
+        # Get lateset trained parameters
+        elif epochs_index == "0.0":
+            return os.path.join(self.models_dir, self.get_largest_numbered_folder())
+
+        return os.path.join(self.models_dir, epochs_index)
 
     def train(self):
         self.env.env_rand = True
@@ -78,7 +95,7 @@ class TQC:
                 episode_num += 1
                 
             if save_flag:
-                path = os.path.join(MODELS_DIR, str((t + 1) // self.save_freq))
+                path = os.path.join(self.models_dir, str((t + 1) // self.save_freq))
                 os.makedirs(path, exist_ok=True)
                 self.trainer.save(path)
                 np.save(os.path.join(path, "reward"), episode_data)
@@ -88,7 +105,7 @@ class TQC:
         self.env.env_rand = False
         self.env.rendering = True
 
-        self.trainer.load(MODELS_SUBDIR)
+        self.trainer.load(self.models_subdir)
         # reset_agent.load(models_subdir)
         self.actor.eval()
         self.critic.eval()
