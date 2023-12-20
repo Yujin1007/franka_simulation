@@ -1,1 +1,3 @@
-include py_src/assets/cpp_library/controller.so
+recursive-include py_src/assets *
+recursive-include py_src/models/classifier *.pt
+recursive-include py_src/models/tqc/model/default_model *

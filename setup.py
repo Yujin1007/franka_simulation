@@ -22,6 +22,10 @@ setup(
         "License::OSI Approved::MIT License",
         "Operating System::POSIX::Linux"
     ],
-    package_data={"py_src/assets/cpp_library": ["controller.so"]},
+    package_data={
+        "py_src.assets": ["*"],
+        "py_src.models.classifier": ["model_cclk.pt", "model_clk.pt"],
+        "py_src.models.tqc.model.default_model": ["*"]
+    },
     include_package_data=True
 )
