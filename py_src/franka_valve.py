@@ -145,6 +145,8 @@ def eval_franka_valve(
     :param save_freq: Save frequency
     :param n_critics: The number of critics
     :param n_quantiles: The number of quantiles
+    :param model_index: Index of the model to load
+    :param epochs_index: Index of the state (save_freq * epochs_index) to load
     '''
     check_valid_object(object)
     model_path = get_eval_model_path(model_index)
@@ -166,6 +168,14 @@ if __name__ == "__main__":
     parser.add_argument("--history", help="The length of the history to observe", type=int, default=5)
     parser.add_argument("--object", help="Object to rotate", default="handle", choices=["handle", "valve"])
 
+    parser.add_argument("--max_timesteps", help="Max timesteps", type=int, default=1e6)
+    parser.add_argument("--batch_size", help="Batch size", type=int, default=256)
+    parser.add_argument("--save_freq", help="Save frequency", type=int, default=1e5)
+    parser.add_argument("--n_ciritics", help="The number of critics", type=int, default=5)
+    parser.add_argument("--n_quantiles", help="The number of quantiles", type=int, default=25)
+    parser.add_argument("--model_index", help="Index of the model to load", type=str, default="default_model")
+    parser.add_argument("--epochs_index", help="Index of the state to load", type=str, default="0.0")
+
     args = parser.parse_args()
 
     # Print Arguments
@@ -175,6 +185,9 @@ if __name__ == "__main__":
     print("------------------------------------")
 
     if args.exec == "train":
-        train_franka_valve(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object)
+        train_franka_valve(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object,
+                           max_timesteps=args.max_timesteps, batch_size=args.batch_size, save_freq=args.save_freq, n_critics=args.n_critics, n_quantiles=args.n_quantiles)
     elif args.exec == "eval":
-        eval_franka_valve(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object)
+        eval_franka_valve(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object,
+                           max_timesteps=args.max_timesteps, batch_size=args.batch_size, save_freq=args.save_freq, n_critics=args.n_critics, n_quantiles=args.n_quantiles,
+                           model_index=args.model_index, epochs_index=args.epochs_index)
