@@ -14,9 +14,10 @@
 // #include <torch/torch.h>
 // #include <torch/script.h>
 
-CController::CController(int JDOF)
+CController::CController(int JDOF, const std::string& package_dir)
 {
 	_k = JDOF;
+	Model.load_model(package_dir);
 	Initialize();
 }
 
@@ -2021,7 +2022,7 @@ PYBIND11_MODULE(controller, m)
 	m.doc() = "pybind11 for controller";
 
 	py::class_<CController>(m, "CController")
-		.def(py::init<int>())
+		.def(py::init<int, const std::string&>())
 		.def("read", &CController::read_pybind)
 		.def("control_mujoco", &CController::control_mujoco)
 		.def("write", &CController::write_pybind)

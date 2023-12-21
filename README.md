@@ -15,7 +15,7 @@
      * (eigen 경로 확인요망 출처: https://velog.io/@ys__us/fatal-error-EigenCore-No-such-file-or-directory) 
 
 * Use
-  * `franka_simulation/py_src` 디렉토리로 이동
+  * `franka_simulation/franka_valve` 디렉토리로 이동
   *  python franka_valve.py
 
 * 인자 설명 - franka_valve.py
