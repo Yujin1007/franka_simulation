@@ -1,8 +1,8 @@
 import os
 import torch
 
-from models.tqc.functions import quantile_huber_loss_f
-from models.tqc import DEVICE
+from franka_valve.models.tqc.functions import quantile_huber_loss_f
+from franka_valve.models.tqc import DEVICE
 
 
 class Trainer(object):

@@ -4,10 +4,10 @@ import mujoco
 from gym import spaces
 from random import random, randint
 from scipy.spatial.transform import Rotation as R
-from utils import tools, rotations
+from franka_valve.utils import tools, rotations
 import torch
 
-from fr3_envs.bases.fr3_rpy import Fr3_rpy
+from franka_valve.fr3_envs.bases.fr3_rpy import Fr3_rpy
 
 # Constants
 BODY = 1

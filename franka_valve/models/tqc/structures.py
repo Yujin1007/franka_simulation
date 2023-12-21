@@ -7,7 +7,7 @@ from gym import spaces
 import gym
 
 
-from models.tqc import DEVICE
+from franka_valve.models.tqc import DEVICE
 
 
 LOG_STD_MIN_MAX = (-20, 2)

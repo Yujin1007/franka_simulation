@@ -2,14 +2,13 @@ import os
 import copy
 import numpy as np
 
-from models.tqc import DEVICE
-from models.tqc.trainer import Trainer
-from models.tqc.structures import ReplayBuffer, Actor, Critic
+from franka_valve import PACKAGE_DIR
+from franka_valve.models.tqc import DEVICE
+from franka_valve.models.tqc.trainer import Trainer
+from franka_valve.models.tqc.structures import ReplayBuffer, Actor, Critic
 
 # Constants
 NUM_EP = 6
-
-HOME = os.getcwd()
 
 class TQC:
     def __init__(self, env, policy_kwargs, max_timesteps, batch_size, save_freq, model_path, epochs_index):
@@ -35,7 +34,7 @@ class TQC:
                                tau=0.005,
                                target_entropy=-np.prod(env.action_space.shape).item())
         
-        self.models_dir = os.path.join(HOME, "models", "tqc", "model", model_path)
+        self.models_dir = os.path.join(PACKAGE_DIR, "models", "tqc", "model", model_path)
         self.models_subdir = self.get_models_subdir(epochs_index)
 
     def get_largest_numbered_folder(self):

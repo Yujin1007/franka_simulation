@@ -5,9 +5,9 @@ import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 import mujoco
-from utils import rotations, tools
+from franka_valve.utils import rotations, tools
 
-from fr3_envs.bases.fr3_rpy import Fr3_rpy
+from franka_valve.fr3_envs.bases.fr3_rpy import Fr3_rpy
 
 # Constants
 BODY = 1

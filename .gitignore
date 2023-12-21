@@ -33,19 +33,20 @@
 *.cache
 
 # Caches
-py_src/__pycache__
-py_src/fr3_envs/__pycache__
-py_src/fr3_envs/bases/__pycache__
-py_src/utils/__pycache__
+franka_valve/__pycache__
+franka_valve/fr3_envs/__pycache__
+franka_valve/fr3_envs/bases/__pycache__
+franka_valve/utils/__pycache__
 
-py_src/models/__pycache__
-py_src/models/tqc/__pycache__
-py_src/models/classifier/__pycache__
+franka_valve/models/__pycache__
+franka_valve/models/tqc/__pycache__
+franka_valve/models/classifier/__pycache__
 
 # pypi packages
-py_src/franka_valve.egg-info
+franka_valve.egg-info
 dist/
 
 MUJOCO_LOG.TXT
 .vscode
 .idea
+build/lib/

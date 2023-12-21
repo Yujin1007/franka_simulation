@@ -1,0 +1,3 @@
+from franka_valve.eval_franka_valve import eval_franka_valve
+
+eval_franka_valve()

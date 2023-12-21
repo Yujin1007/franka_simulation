@@ -1,3 +1,4 @@
-recursive-include py_src/assets *
-recursive-include py_src/models/classifier *.pt
-recursive-include py_src/models/tqc/model/default_model *
+recursive-include franka_valve/assets *
+recursive-include franka_valve/models/classifier *.pt
+recursive-include franka_valve/models/tqc/model/default_model *
+recursive-include franka_valve *.py

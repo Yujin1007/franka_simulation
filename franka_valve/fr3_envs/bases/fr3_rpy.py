@@ -3,16 +3,16 @@ import torch
 from abc import *
 import numpy as np
 
-from utils import tools
+from franka_valve.utils import tools
 import mujoco
 from mujoco import viewer
 import gym
 from gym import spaces
 
-from fr3_envs.bases.fr3 import Fr3
-from models.classifier.classifier_tqc import Classifier
-from models.tqc import DEVICE
-HOME = os.getcwd()
+from franka_valve import PACKAGE_DIR
+from franka_valve.fr3_envs.bases.fr3 import Fr3
+from franka_valve.models.classifier.classifier_tqc import Classifier
+from franka_valve.models.tqc import DEVICE
 
 # Constants
 BODY = 1
@@ -47,9 +47,8 @@ class Fr3_rpy(Fr3):
         self.q_init = [0.374, -1.02, 0.245, -1.51, 0.0102, 0.655, 0.3, 0.04, 0.04, 0, 0]
         self.episode_number = -1
 
-        os.chdir(HOME)
-        self.classifier_clk = self.BringClassifier(os.path.join("models", "classifier", "model_clk.pt"))
-        self.classifier_cclk = self.BringClassifier(os.path.join("models", "classifier", "model_cclk.pt"))
+        self.classifier_clk = self.BringClassifier(os.path.join(PACKAGE_DIR, "models", "classifier", "model_clk.pt"))
+        self.classifier_cclk = self.BringClassifier(os.path.join(PACKAGE_DIR, "models", "classifier", "model_cclk.pt"))
 
         desired_contact_list, desired_contact_list_finger, desired_contact_list_obj,\
         robot_contact_list, object_contact_list = self.read_contact_json("contact.json")

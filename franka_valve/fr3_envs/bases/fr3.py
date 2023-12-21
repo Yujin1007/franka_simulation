@@ -1,7 +1,6 @@
 import os
 import json
 from abc import *
-from time import sleep
 
 import numpy as np
 from numpy.linalg import inv
@@ -11,11 +10,13 @@ import mujoco
 from mujoco import viewer
 
 # Import requried libraries
-from utils import find_libraries
+import franka_valve
+from franka_valve import PACKAGE_DIR
+from franka_valve.utils import find_libraries
 rbdl_path, urdfreader_path = find_libraries.find_libraries()
 
 try:
-    from assets.cpp_library import controller
+    from franka_valve.assets.cpp_library import controller
 except ImportError as ie:
     print("Register rbdl and rbdl_urdfreader to PATH")
     print("Command : ")
@@ -33,8 +34,6 @@ TASK_SPACE_TIME = 3+1+0.5
 RL = 2
 MANUAL = 1
 
-HOME = os.getcwd()
-
 class Fr3:
     metadata = {"render_modes": ["human"], "render_fps": 30}
 
@@ -51,7 +50,7 @@ class Fr3:
 
     # Read json file of contact information
     def read_contact_json(self, json_name):
-        json_path = os.path.join(HOME, "fr3_envs", "jsons", "contacts", json_name)
+        json_path = os.path.join(PACKAGE_DIR, "fr3_envs", "jsons", "contacts", json_name)
         with open(json_path, 'r') as json_file:
             json_data = json.load(json_file)
 
@@ -64,7 +63,8 @@ class Fr3:
         return desired_contact_list, desired_contact_list_finger, desired_contact_list_obj, robot_contact_list, object_contact_list
 
     def import_model(self):
-        model_path = os.path.join("assets", "franka_emika_panda", "scene_valve.xml")
+        package_path = os.path.dirname(franka_valve.__file__)
+        model_path = os.path.join(package_path, "assets", "franka_emika_panda", "scene_valve.xml")
         return mujoco.MjModel.from_xml_path(model_path)
 
     @abstractmethod
@@ -111,7 +111,7 @@ class Fr3:
     # Read json file of candidate information
     # Return quat_candidate, pos_candidate, nobj
     def read_candidate_json(self, obj, json_name):
-        json_path = os.path.join(HOME, "fr3_envs", "jsons", "candidates", json_name)
+        json_path = os.path.join(PACKAGE_DIR, "fr3_envs", "jsons", "candidates", json_name)
         with open(json_path, 'r') as json_file:
             json_data = json.load(json_file)
 

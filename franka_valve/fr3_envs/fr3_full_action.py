@@ -1,12 +1,11 @@
 import os
-import json
 from abc import *
 from random import random, randint
 
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-from utils import tools
+from franka_valve.utils import tools
 import mujoco
 import gym
 from gym import spaces
@@ -24,8 +23,6 @@ RL = 2
 MANUAL = 1
 RPY = False
 XYZRPY = True
-
-HOME = os.getcwd()
 
 class Fr3_full_action(Fr3):
     def __init__(self):        
