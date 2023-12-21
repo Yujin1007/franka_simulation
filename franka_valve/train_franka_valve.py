@@ -77,7 +77,7 @@ def train_franka_valve(
                         "models" : model_hyperparameters
                       }
     
-    json_path = os.chdir(os.path.join(PACKAGE_DIR, "models", "tqc", "model", model_path))
+    json_path = os.path.join(PACKAGE_DIR, "models", "tqc", "model", model_path)
     with open(os.path.join(json_path, "hyperparameters.json"), 'w') as f:
         json.dump(hyperparameters, f, ensure_ascii=False, indent=4)
 

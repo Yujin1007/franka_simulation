@@ -1,7 +1,7 @@
 #!/bin/bash
 
 build_folder="build"
-destination_folder="py_src/assets/cpp_library"
+destination_folder="franka_valve/assets/cpp_library"
 file_to_copy="controller.cpython-38-x86_64-linux-gnu.so"
 
 if [ -d "$build_folder" ]; then

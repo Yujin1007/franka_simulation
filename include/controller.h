@@ -21,7 +21,7 @@ class CController
 {
 
 public:
-    CController(int JDOF);
+    CController(int JDOF, const std::string& package_dir);
     virtual ~CController();	
 
     void read(double t, double* q, double* qdot, double timestep);

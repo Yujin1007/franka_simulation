@@ -43,7 +43,7 @@ class Fr3:
 
         self.model = self.import_model()
         self.data = mujoco.MjData(self.model)
-        self.controller = controller.CController(self.k)
+        self.controller = controller.CController(self.k, PACKAGE_DIR)
         self._torque = np.zeros(self.dof, dtype=np.float64)
         self.rendering = False
         self.stack = history

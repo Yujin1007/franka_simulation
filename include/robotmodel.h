@@ -25,6 +25,7 @@ public:
     void calculate_EE_Jacobians(); // calcule jacobian
     void calculate_EE_positions_orientations(); // calculte End-effector postion, orientation
     void calculate_EE_velocity(); // calculate End-effector velocity
+    void load_model(const std::string& package_dir); // read URDF model
 
     MatrixXd _A; // inertia matrix
     VectorXd _g; // gravity force vector
@@ -44,7 +45,6 @@ public:
 
 private:
 	void Initialize();
-	void load_model(); // read URDF model
 	void set_robot_config();
 
     VectorXd _q, _qdot; // joint sensordata
