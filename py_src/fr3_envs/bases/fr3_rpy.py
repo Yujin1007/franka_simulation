@@ -52,7 +52,7 @@ class Fr3_rpy(Fr3):
         self.classifier_cclk = self.BringClassifier(os.path.join("models", "classifier", "model_cclk.pt"))
 
         desired_contact_list, desired_contact_list_finger, desired_contact_list_obj,\
-        robot_contact_list, object_contact_list = self.read_contact_json("contact_tqc.json" if env == "fr3_tqc" else "contact_rpy.json")
+        robot_contact_list, object_contact_list = self.read_contact_json("contact.json")
 
         self.desired_contact_bid = tools.name2id(self.model, GEOM, desired_contact_list)
         self.desired_contact_finger_bid = tools.name2id(self.model, GEOM, desired_contact_list_finger)
