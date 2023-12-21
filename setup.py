@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="franka-valve",
-    version="0.0.0.2",
+    version="0.0.0",
     description="Rotate a valve using Franka Panda with Reinforcement Learning in mujoco simulation.",
     author="Yujin1007, twkang43",
     author_email="yujin1004k@gmail.com, twkang43@gmail.com",
@@ -24,6 +24,7 @@ setup(
                         "gym==0.19.0", 
                         "gymnasium==0.28.1",
                         "pyparsing>=3.0.9",
+                        "scipy>=1.8.1",
                         "six>=1.16.0"
                      ],
     packages=find_packages(include=["franka_valve", 

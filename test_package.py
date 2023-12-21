@@ -1,6 +1,5 @@
 import argparse
-from franka_valve.train_franka_valve import train_franka_valve
-from franka_valve.eval_franka_valve import eval_franka_valve
+from franka_valve import franka_simulation
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -30,9 +29,9 @@ if __name__ == "__main__":
     print("------------------------------------")
 
     if args.exec == "train":
-        train_franka_valve(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object,
-                           max_timesteps=args.max_timesteps, batch_size=args.batch_size, save_freq=args.save_freq, n_critics=args.n_critics, n_quantiles=args.n_quantiles)
+        franka_simulation.train(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object,
+                                max_timesteps=args.max_timesteps, batch_size=args.batch_size, save_freq=args.save_freq, n_critics=args.n_critics, n_quantiles=args.n_quantiles)
     elif args.exec == "eval":
-        eval_franka_valve(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object,
-                           max_timesteps=args.max_timesteps, batch_size=args.batch_size, save_freq=args.save_freq, n_critics=args.n_critics, n_quantiles=args.n_quantiles,
-                           model_index=args.model_index, epochs_index=args.epochs_index)
+        franka_simulation.eval(rw_acc=args.rw_acc, rw_c=args.rw_c, rw_b=args.rw_b, rw_gr=args.rw_gr, history=args.history, object=args.object,
+                               max_timesteps=args.max_timesteps, batch_size=args.batch_size, save_freq=args.save_freq, n_critics=args.n_critics, n_quantiles=args.n_quantiles,
+                               model_index=args.model_index, epochs_index=args.epochs_index)

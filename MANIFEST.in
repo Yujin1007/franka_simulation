@@ -1,4 +1,6 @@
 recursive-include franka_valve/assets *
 recursive-include franka_valve/models/classifier *.pt
 recursive-include franka_valve/models/tqc/model/default_model *
+recursive-include franka_valve/fr3_envs/jsons/candidates *
+recursive-include franka_valve/fr3_envs/jsons/contacts *
 recursive-include franka_valve *.py
