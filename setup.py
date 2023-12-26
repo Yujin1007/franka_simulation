@@ -4,12 +4,12 @@ from setuptools import setup, find_packages
 setup(
     name="franka-valve",
     version="0.0.0",
-    description="Rotate a valve using Franka Panda with Reinforcement Learning in mujoco simulation.",
+    description="Rotate a valve using Franka Research 3 with Reinforcement Learning in mujoco simulation.",
     author="Yujin1007, twkang43",
     author_email="yujin1004k@gmail.com, twkang43@gmail.com",
     url="https://github.com/Yujin1007/franka_simulation",
     license="MIT",
-    keywords=["reinforcement learning", "RL", "robotics", "robot", "franka", "emika", "panda"],
+    keywords=["reinforcement learning", "RL", "robotics", "robot", "franka", "emika", "panda", "fr3"],
     platforms=[sys.platform],
 
     install_requires=[
